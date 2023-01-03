@@ -7,7 +7,8 @@
     "prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "test": "jest"
+    "test": "jest",
+    "dev": "ts-node-dev --respawn --transpile-only --clear -r dotenv/config src/main"
   },
   "keywords": [],
   "author": "",
