@@ -12,7 +12,7 @@ export default {
     '@/(.+)': '<rootDir>/src/$1'
   },
   roots: [
-    '<rootDir/src',
+    '<rootDir>/src',
     '<rootDir>/tests'
   ],
   setupFiles: ['dotenv/config'],
