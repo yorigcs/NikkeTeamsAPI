@@ -12,11 +12,23 @@ class EncrypterSpy implements Encrypter {
   }
 }
 
+const throwError = (): never => {
+  throw new Error()
+}
+
 describe('AddAccountService', () => {
   it('should call Encrypter with correct params', async () => {
     const encryptSpy = new EncrypterSpy()
     const sut = new AddAccountService(encryptSpy)
     await sut.perform({ email: 'any@mail.com', name: 'any_name', password: 'any_password' })
     expect(encryptSpy.plainText).toBe('any_password')
+  })
+
+  it('should throws if Encrypter throws', async () => {
+    const encryptSpy = new EncrypterSpy()
+    const sut = new AddAccountService(encryptSpy)
+    jest.spyOn(encryptSpy, 'encrypt').mockImplementationOnce(throwError)
+    const promise = sut.perform({ email: 'any@mail.com', name: 'any_name', password: 'any_password' })
+    await expect(promise).rejects.toThrow()
   })
 })
