@@ -1,6 +1,7 @@
 export class AddAccoutError extends Error {
-  constructor () {
-    super('Houve um problema ao criar uma nova conta!')
+  constructor (message?: string) {
+    const msg = message ?? 'Houve um problema ao criar uma nova conta!'
+    super(msg)
     this.name = 'AddAccoutError'
   }
 }
