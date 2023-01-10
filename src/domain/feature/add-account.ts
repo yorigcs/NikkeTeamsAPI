@@ -1,4 +1,4 @@
-import { AddAccoutError } from '@/domain/errors'
+import { AddAccountError } from '@/domain/errors'
 import { Account } from '@/domain/models'
 
 export interface AddAcount {
@@ -7,5 +7,5 @@ export interface AddAcount {
 
 export namespace AddAcount {
   export type Params = Account
-  export type Result = Omit<Account, 'password'> | AddAccoutError
+  export type Result = Omit<Account, 'password'> | AddAccountError
 }

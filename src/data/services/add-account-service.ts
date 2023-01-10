@@ -1,5 +1,5 @@
 import { Encrypter } from '@/data/contracts/crypto'
-import { AddAccoutError } from '@/domain/errors'
+import { AddAccountError } from '@/domain/errors'
 import { AddAcount } from '@/domain/feature'
 
 export class AddAccountService {
@@ -11,7 +11,7 @@ export class AddAccountService {
       const { password, ...accountInfo } = params
       return { ...accountInfo }
     } catch (err) {
-      return new AddAccoutError()
+      return new AddAccountError()
     }
   }
 }
