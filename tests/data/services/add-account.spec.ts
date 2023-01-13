@@ -1,7 +1,7 @@
 import { AddAccountError } from '@/domain/errors'
 
 import { AddAccountService } from '@/data/services'
-import { Encrypter } from '@/data/contracts/crypto'
+import { Encrypter, Uuid } from '@/data/contracts/crypto'
 import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repo'
 
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -13,6 +13,7 @@ const throwError = (): never => {
 describe('AddAccountService', () => {
   let encrypter: MockProxy<Encrypter>
   let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
+  let uuid: MockProxy<Uuid>
   let sut: AddAccountService
   const accountData = { email: 'any@mail.com', name: 'any_name', password: 'any_password', picture: 'any_picture' }
 
@@ -21,7 +22,9 @@ describe('AddAccountService', () => {
     encrypter.encrypt.mockResolvedValue('hashedPassword')
     userAccountRepo = mock()
     userAccountRepo.load.mockResolvedValue(false)
-    sut = new AddAccountService(encrypter, userAccountRepo)
+    uuid = mock()
+    uuid.generate.mockReturnValue('any_id')
+    sut = new AddAccountService(encrypter, userAccountRepo, uuid)
   })
 
   it('should call Encrypter with correct params', async () => {
@@ -58,6 +61,12 @@ describe('AddAccountService', () => {
     userAccountRepo.load.mockResolvedValueOnce(true)
     await sut.perform(accountData)
     expect(userAccountRepo.save).toHaveBeenCalledTimes(0)
+  })
+
+  it('should call Uuid with correct params', async () => {
+    await sut.perform(accountData)
+    expect(uuid.generate).toHaveBeenCalledWith({ key: accountData.email })
+    expect(uuid.generate).toHaveBeenCalledTimes(1)
   })
 
   it('should returns account infos without password if sucess', async () => {
