@@ -1,5 +1,3 @@
-import { AddAccountError } from '@/domain/errors'
-
 import { AddAccountService } from '@/data/services'
 import { Encrypter, Uuid } from '@/data/contracts/crypto'
 import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repo'
@@ -33,16 +31,16 @@ describe('AddAccountService', () => {
     expect(encrypter.encrypt).toHaveBeenCalledTimes(1)
   })
 
-  it('should returns AddAccountError if Encrypter throws', async () => {
+  it('should throws if AddAccountError if Encrypter throws', async () => {
     encrypter.encrypt.mockImplementationOnce(throwError)
-    const promise = await sut.perform(accountData)
-    expect(promise).toBeInstanceOf(AddAccountError)
+    const promise = sut.perform(accountData)
+    await expect(promise).rejects.toThrow()
   })
 
-  it('should returns AddAccountError if CreateUserAccount throws', async () => {
+  it('should throws if CreateUserAccount throws', async () => {
     userAccountRepo.save.mockImplementationOnce(throwError)
-    const promise = await sut.perform(accountData)
-    expect(promise).toBeInstanceOf(AddAccountError)
+    const promise = sut.perform(accountData)
+    await expect(promise).rejects.toThrow()
   })
 
   it('should call saveAccountRepo with correct params', async () => {
@@ -69,8 +67,8 @@ describe('AddAccountService', () => {
     expect(uuid.generate).toHaveBeenCalledTimes(1)
   })
 
-  it('should returns account infos without password if sucess', async () => {
+  it('should returns true if sucess', async () => {
     const promise = await sut.perform(accountData)
-    expect(promise).toEqual({ email: 'any@mail.com', name: 'any_name', picture: 'any_picture' })
+    expect(promise).toBe(true)
   })
 })
