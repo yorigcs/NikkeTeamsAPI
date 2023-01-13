@@ -2,7 +2,7 @@ import { AddAccountError } from '@/domain/errors'
 
 import { AddAccountService } from '@/data/services'
 import { Encrypter } from '@/data/contracts/crypto'
-import { SaveAccountRepository } from '@/data/contracts/repo'
+import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repo'
 
 import { mock, MockProxy } from 'jest-mock-extended'
 
@@ -13,6 +13,7 @@ const throwError = (): never => {
 describe('AddAccountService', () => {
   let encrypter: MockProxy<Encrypter>
   let saveAccountRepo: MockProxy<SaveAccountRepository>
+  let loadAccountByEmailRepo: MockProxy<LoadAccountByEmailRepository>
   let sut: AddAccountService
   const accountData = { email: 'any@mail.com', name: 'any_name', password: 'any_password', picture: 'any_picture' }
 
@@ -20,7 +21,9 @@ describe('AddAccountService', () => {
     encrypter = mock()
     encrypter.encrypt.mockResolvedValue('hashedPassword')
     saveAccountRepo = mock()
-    sut = new AddAccountService(encrypter, saveAccountRepo)
+    loadAccountByEmailRepo = mock()
+    loadAccountByEmailRepo.load.mockResolvedValue(false)
+    sut = new AddAccountService(encrypter, saveAccountRepo, loadAccountByEmailRepo)
   })
 
   it('should call Encrypter with correct params', async () => {
@@ -45,6 +48,18 @@ describe('AddAccountService', () => {
     await sut.perform(accountData)
     expect(saveAccountRepo.save).toHaveBeenCalledWith({ id: 'any_id', ...accountData, password: 'hashedPassword' })
     expect(saveAccountRepo.save).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call loadAccountByEmailRepo with correct params', async () => {
+    await sut.perform(accountData)
+    expect(loadAccountByEmailRepo.load).toHaveBeenCalledWith({ email: accountData.email })
+    expect(loadAccountByEmailRepo.load).toHaveBeenCalledTimes(1)
+  })
+
+  it('should not call saveAccountRepo if loadAccountByEmailRepo is true', async () => {
+    loadAccountByEmailRepo.load.mockResolvedValueOnce(true)
+    await sut.perform(accountData)
+    expect(saveAccountRepo.save).toHaveBeenCalledTimes(0)
   })
 
   it('should returns account infos without password if sucess', async () => {
