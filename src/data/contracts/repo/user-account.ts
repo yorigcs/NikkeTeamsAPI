@@ -10,7 +10,15 @@ export namespace SaveAccountRepository {
     password: string
     picture: string
   }
+  export type Output = boolean
 
-  export type Output = { sucess: boolean }
+}
 
+export interface LoadAccountByEmailRepository {
+  load: (input: LoadAccountByEmailRepository.Input) => Promise<LoadAccountByEmailRepository.Output>
+}
+
+export namespace LoadAccountByEmailRepository {
+  export type Input = { email: string }
+  export type Output = boolean
 }
