@@ -1,4 +1,4 @@
-import { Encrypter } from '@/data/contracts/crypto'
+import { Encrypter, Uuid } from '@/data/contracts/crypto'
 import { AddAccountError } from '@/domain/errors'
 import { AddAcount } from '@/domain/feature'
 import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repo/user-account'
@@ -6,7 +6,8 @@ import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/cont
 export class AddAccountService {
   constructor (
     private readonly encrypter: Encrypter,
-    private readonly userAccountRepo: SaveAccountRepository & LoadAccountByEmailRepository
+    private readonly userAccountRepo: SaveAccountRepository & LoadAccountByEmailRepository,
+    private readonly uuid: Uuid
 
   ) { }
 
@@ -18,7 +19,8 @@ export class AddAccountService {
 
       if (!hasAccount) {
         const hashpassword = await this.encrypter.encrypt({ plainText: password })
-        await this.userAccountRepo.save({ id: 'any_id', password: hashpassword, ...accountInfo })
+        const uuid = this.uuid.generate({ key: accountInfo.email })
+        await this.userAccountRepo.save({ id: uuid, password: hashpassword, ...accountInfo })
       }
 
       return { ...accountInfo }
