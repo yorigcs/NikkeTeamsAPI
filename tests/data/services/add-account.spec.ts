@@ -12,18 +12,16 @@ const throwError = (): never => {
 
 describe('AddAccountService', () => {
   let encrypter: MockProxy<Encrypter>
-  let saveAccountRepo: MockProxy<SaveAccountRepository>
-  let loadAccountByEmailRepo: MockProxy<LoadAccountByEmailRepository>
+  let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
   let sut: AddAccountService
   const accountData = { email: 'any@mail.com', name: 'any_name', password: 'any_password', picture: 'any_picture' }
 
   beforeEach(() => {
     encrypter = mock()
     encrypter.encrypt.mockResolvedValue('hashedPassword')
-    saveAccountRepo = mock()
-    loadAccountByEmailRepo = mock()
-    loadAccountByEmailRepo.load.mockResolvedValue(false)
-    sut = new AddAccountService(encrypter, saveAccountRepo, loadAccountByEmailRepo)
+    userAccountRepo = mock()
+    userAccountRepo.load.mockResolvedValue(false)
+    sut = new AddAccountService(encrypter, userAccountRepo)
   })
 
   it('should call Encrypter with correct params', async () => {
@@ -39,27 +37,27 @@ describe('AddAccountService', () => {
   })
 
   it('should returns AddAccountError if CreateUserAccount throws', async () => {
-    saveAccountRepo.save.mockImplementationOnce(throwError)
+    userAccountRepo.save.mockImplementationOnce(throwError)
     const promise = await sut.perform(accountData)
     expect(promise).toBeInstanceOf(AddAccountError)
   })
 
   it('should call saveAccountRepo with correct params', async () => {
     await sut.perform(accountData)
-    expect(saveAccountRepo.save).toHaveBeenCalledWith({ id: 'any_id', ...accountData, password: 'hashedPassword' })
-    expect(saveAccountRepo.save).toHaveBeenCalledTimes(1)
+    expect(userAccountRepo.save).toHaveBeenCalledWith({ id: 'any_id', ...accountData, password: 'hashedPassword' })
+    expect(userAccountRepo.save).toHaveBeenCalledTimes(1)
   })
 
   it('should call loadAccountByEmailRepo with correct params', async () => {
     await sut.perform(accountData)
-    expect(loadAccountByEmailRepo.load).toHaveBeenCalledWith({ email: accountData.email })
-    expect(loadAccountByEmailRepo.load).toHaveBeenCalledTimes(1)
+    expect(userAccountRepo.load).toHaveBeenCalledWith({ email: accountData.email })
+    expect(userAccountRepo.load).toHaveBeenCalledTimes(1)
   })
 
   it('should not call saveAccountRepo if loadAccountByEmailRepo is true', async () => {
-    loadAccountByEmailRepo.load.mockResolvedValueOnce(true)
+    userAccountRepo.load.mockResolvedValueOnce(true)
     await sut.perform(accountData)
-    expect(saveAccountRepo.save).toHaveBeenCalledTimes(0)
+    expect(userAccountRepo.save).toHaveBeenCalledTimes(0)
   })
 
   it('should returns account infos without password if sucess', async () => {

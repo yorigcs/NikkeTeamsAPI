@@ -6,8 +6,7 @@ import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/cont
 export class AddAccountService {
   constructor (
     private readonly encrypter: Encrypter,
-    private readonly saveAccountRepo: SaveAccountRepository,
-    private readonly loadAccountByEmailRepo: LoadAccountByEmailRepository
+    private readonly userAccountRepo: SaveAccountRepository & LoadAccountByEmailRepository
 
   ) { }
 
@@ -15,11 +14,11 @@ export class AddAccountService {
     try {
       const { password, ...accountInfo } = params
 
-      const hasAccount = await this.loadAccountByEmailRepo.load({ email: accountInfo.email })
+      const hasAccount = await this.userAccountRepo.load({ email: accountInfo.email })
 
       if (!hasAccount) {
         const hashpassword = await this.encrypter.encrypt({ plainText: password })
-        await this.saveAccountRepo.save({ id: 'any_id', password: hashpassword, ...accountInfo })
+        await this.userAccountRepo.save({ id: 'any_id', password: hashpassword, ...accountInfo })
       }
 
       return { ...accountInfo }
