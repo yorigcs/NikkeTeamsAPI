@@ -4,10 +4,6 @@ import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/cont
 
 import { mock, MockProxy } from 'jest-mock-extended'
 
-const throwError = (): never => {
-  throw new Error()
-}
-
 describe('AddAccountService', () => {
   let encrypter: MockProxy<Encrypter>
   let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
@@ -21,7 +17,7 @@ describe('AddAccountService', () => {
     userAccountRepo = mock()
     userAccountRepo.load.mockResolvedValue(false)
     uuid = mock()
-    uuid.generate.mockReturnValue('any_id')
+    uuid.generate.mockResolvedValue('any_id')
     sut = new AddAccountService(encrypter, userAccountRepo, uuid)
   })
 
@@ -32,15 +28,15 @@ describe('AddAccountService', () => {
   })
 
   it('should throws if AddAccountError if Encrypter throws', async () => {
-    encrypter.encrypt.mockImplementationOnce(throwError)
+    encrypter.encrypt.mockRejectedValueOnce(new Error('Encrypter error'))
     const promise = sut.perform(accountData)
-    await expect(promise).rejects.toThrow()
+    await expect(promise).rejects.toThrow(new Error('Encrypter error'))
   })
 
   it('should throws if CreateUserAccount throws', async () => {
-    userAccountRepo.save.mockImplementationOnce(throwError)
+    userAccountRepo.save.mockRejectedValueOnce(new Error('CreateUserAccount error'))
     const promise = sut.perform(accountData)
-    await expect(promise).rejects.toThrow()
+    await expect(promise).rejects.toThrow(new Error('CreateUserAccount error'))
   })
 
   it('should call saveAccountRepo with correct params', async () => {
@@ -65,6 +61,12 @@ describe('AddAccountService', () => {
     await sut.perform(accountData)
     expect(uuid.generate).toHaveBeenCalledWith({ key: accountData.email })
     expect(uuid.generate).toHaveBeenCalledTimes(1)
+  })
+
+  it('should rethrows if Uuid throws', async () => {
+    uuid.generate.mockRejectedValueOnce(new Error('Uuid error'))
+    const promise = sut.perform(accountData)
+    await expect(promise).rejects.toThrow(new Error('Uuid error'))
   })
 
   it('should returns true if sucess', async () => {
