@@ -1,8 +1,8 @@
-import { Uuid } from '@/data/contracts/crypto'
+import { UUID } from '@/data/contracts/crypto'
 import { v4 } from 'uuid'
 
-export class UUIDHandler implements Uuid {
-  async generate ({ key }: Uuid.Input): Promise<Uuid.Output> {
+export class UUIDHandler implements UUID {
+  async generate ({ key }: UUID.Input): Promise<UUID.Output> {
     const uuid = v4()
     if (typeof uuid === 'string') {
       return `${key}_${uuid}`

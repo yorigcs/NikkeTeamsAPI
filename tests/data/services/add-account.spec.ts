@@ -1,5 +1,5 @@
 import { AddAccountService } from '@/data/services'
-import { Encrypter, Uuid } from '@/data/contracts/crypto'
+import { Encrypter, UUID } from '@/data/contracts/crypto'
 import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repo'
 import { AddAcount } from '@/domain/feature'
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -7,7 +7,7 @@ import { mock, MockProxy } from 'jest-mock-extended'
 describe('AddAccountService', () => {
   let encrypter: MockProxy<Encrypter>
   let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
-  let uuid: MockProxy<Uuid>
+  let uuid: MockProxy<UUID>
   let sut: AddAccountService
   let accountData: AddAcount.Params
 

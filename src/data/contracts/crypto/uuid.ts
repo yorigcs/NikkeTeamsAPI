@@ -1,8 +1,8 @@
-export interface Uuid {
-  generate: (input: Uuid.Input) => Promise<Uuid.Output>
+export interface UUID {
+  generate: (input: UUID.Input) => Promise<UUID.Output>
 }
 
-export namespace Uuid {
+export namespace UUID {
   export type Input = { key: string }
   export type Output = string
 }
