@@ -1,7 +1,7 @@
 import { AddAccountService } from '@/data/services'
 import { Encrypter, Uuid } from '@/data/contracts/crypto'
 import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repo'
-
+import { AddAcount } from '@/domain/feature'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('AddAccountService', () => {
@@ -9,15 +9,19 @@ describe('AddAccountService', () => {
   let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
   let uuid: MockProxy<Uuid>
   let sut: AddAccountService
-  const accountData = { email: 'any@mail.com', name: 'any_name', password: 'any_password', picture: 'any_picture' }
+  let accountData: AddAcount.Params
 
-  beforeEach(() => {
+  beforeAll(() => {
+    accountData = { email: 'any@mail.com', name: 'any_name', password: 'any_password', picture: 'any_picture' }
     encrypter = mock()
     encrypter.encrypt.mockResolvedValue('hashedPassword')
     userAccountRepo = mock()
     userAccountRepo.load.mockResolvedValue(false)
     uuid = mock()
     uuid.generate.mockResolvedValue('any_id')
+  })
+
+  beforeEach(() => {
     sut = new AddAccountService(encrypter, userAccountRepo, uuid)
   })
 
