@@ -1,5 +1,5 @@
 export interface Uuid {
-  generate: (input: Uuid.Input) => Uuid.Output
+  generate: (input: Uuid.Input) => Promise<Uuid.Output>
 }
 
 export namespace Uuid {
