@@ -63,7 +63,7 @@ describe('AddAccountService', () => {
 
   it('should call Uuid with correct params', async () => {
     await sut.perform(accountData)
-    expect(uuid.generate).toHaveBeenCalledWith({ key: accountData.email })
+    expect(uuid.generate).toHaveBeenCalledWith({})
     expect(uuid.generate).toHaveBeenCalledTimes(1)
   })
 

@@ -20,9 +20,14 @@ describe('UuidHandler', () => {
     expect(v4).toHaveBeenCalledTimes(1)
   })
 
-  it('should returns correct uuid', async () => {
+  it('should returns correct uuid with key', async () => {
     const uuid = await sut.generate({ key: 'any_key' })
     expect(uuid).toBe('any_key_any_uuid')
+  })
+
+  it('should returns correct uuid without key', async () => {
+    const uuid = await sut.generate({ })
+    expect(uuid).toBe('any_uuid')
   })
 
   it('throws if uuid is not a string', async () => {

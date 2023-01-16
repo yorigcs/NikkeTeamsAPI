@@ -18,7 +18,7 @@ export class AddAccountService implements AddAcount {
 
     if (!hasAccount) {
       const hashpassword = await this.encrypter.encrypt({ plainText: password })
-      const uuid = await this.uuid.generate({ key: accountInfo.email })
+      const uuid = await this.uuid.generate({})
       await this.userAccountRepo.save({ id: uuid, password: hashpassword, ...accountInfo })
       hasSucess = true
     }
