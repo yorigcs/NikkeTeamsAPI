@@ -16,7 +16,7 @@
     "prisma:migrate:dev": "prisma migrate dev"
   },
   "prisma": {
-    "schema": "./src/infra/repo/prisma/schema.prisma"
+    "schema": "./src/infra/repo/schema.prisma"
   },
   "keywords": [],
   "author": "",
