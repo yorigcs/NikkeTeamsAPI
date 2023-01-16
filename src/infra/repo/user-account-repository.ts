@@ -1,5 +1,5 @@
 import { LoadAccountByEmailRepository } from '@/data/contracts/repo'
-import prismaConnection from '@/infra/repo/helpers/prisma'
+import prismaConnection from '@/infra/repo/prisma'
 
 export class UserAccountRepository implements LoadAccountByEmailRepository {
   async load ({ email }: LoadAccountByEmailRepository.Input): Promise<LoadAccountByEmailRepository.Output> {
