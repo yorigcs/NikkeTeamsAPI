@@ -12,6 +12,7 @@ describe('UserAccountRepository', () => {
     user = { name: 'any_name', email: 'any_email', password: 'any_password', picture: 'any_picture', roles: 'user', id: 'any_id' }
     email = 'any_email'
     prismaMock.users.findUnique.mockResolvedValue(null)
+    prismaMock.users.create.mockResolvedValue(user)
   })
   beforeEach(() => {
     sut = new UserAccountRepository()
@@ -26,5 +27,11 @@ describe('UserAccountRepository', () => {
     prismaMock.users.findUnique.mockResolvedValueOnce(user)
     const hasAccount = await sut.load({ email })
     expect(hasAccount).toBe(true)
+  })
+
+  it('should throw an error if load throws', async () => {
+    prismaMock.users.findUnique.mockRejectedValue(new Error('Error to load account'))
+    const promise = sut.load(user)
+    await expect(promise).rejects.toThrow(new Error('Error to load account'))
   })
 })
