@@ -34,4 +34,9 @@ describe('UserAccountRepository', () => {
     const promise = sut.load(user)
     await expect(promise).rejects.toThrow(new Error('Error to load account'))
   })
+
+  it('should calls save without error', async () => {
+    const promise = sut.save(user)
+    await expect(promise).resolves.not.toThrow()
+  })
 })
