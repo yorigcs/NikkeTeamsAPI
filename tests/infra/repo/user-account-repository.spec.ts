@@ -39,4 +39,10 @@ describe('UserAccountRepository', () => {
     const promise = sut.save(user)
     await expect(promise).resolves.not.toThrow()
   })
+
+  it('should throw an error if save throws', async () => {
+    prismaMock.users.create.mockRejectedValue(new Error('Error to save account'))
+    const promise = sut.save(user)
+    await expect(promise).rejects.toThrow(new Error('Error to save account'))
+  })
 })
