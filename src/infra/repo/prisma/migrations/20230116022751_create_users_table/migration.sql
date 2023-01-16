@@ -2,7 +2,7 @@
 CREATE TYPE "Roles" AS ENUM ('admin', 'user');
 
 -- CreateTable
-CREATE TABLE "userAccount" (
+CREATE TABLE "Users" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE "userAccount" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "userAccount_id_key" ON "userAccount"("id");
+CREATE UNIQUE INDEX "Users_id_key" ON "Users"("id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "userAccount_email_key" ON "userAccount"("email");
+CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
