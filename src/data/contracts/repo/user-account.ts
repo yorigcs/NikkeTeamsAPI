@@ -1,16 +1,15 @@
 export interface SaveAccountRepository {
-  save: (input: SaveAccountRepository.Input) => Promise<SaveAccountRepository.Output>
+  save: (input: SaveAccountRepository.Input) => Promise<void>
 }
 
 export namespace SaveAccountRepository {
   export type Input = {
-    id?: string
+    id: string
     name: string
     email: string
     password: string
     picture: string
   }
-  export type Output = boolean
 
 }
 
