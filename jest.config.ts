@@ -16,6 +16,7 @@ export default {
     '<rootDir>/tests'
   ],
   setupFiles: ['dotenv/config'],
+  setupFilesAfterEnv: ['<rootDir>/tests/infra/repo/mocks/prisma.ts'],
   testMatch: ['**/*.spec.ts'],
   transform: {
     '\\.ts$': 'ts-jest'
