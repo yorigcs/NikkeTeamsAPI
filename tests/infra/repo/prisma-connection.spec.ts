@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { prismaConnection } from '@/infra/repo/prisma/prisma-connection'
+import prismaConnection from '@/infra/repo/helpers/prisma'
 
 describe('prismaConnection', () => {
   it('should be instance of PrismaClient', () => {
