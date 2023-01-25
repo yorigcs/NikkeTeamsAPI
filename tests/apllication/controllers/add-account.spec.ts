@@ -9,6 +9,13 @@ class AddAccountController {
         }
       }
     }
+    const { password, confirmPassword } = httpRequest
+    if (password !== confirmPassword) {
+      return {
+        statusCode: 400,
+        body: { error: new Error('The password and the confirmPassword must be equals') }
+      }
+    }
     return {
       statusCode: 200,
       body: 'Account created successfully'
@@ -51,5 +58,11 @@ describe('AddAccountController', () => {
     httpRequest.confirmPassword = undefined
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual({ statusCode: 422, body: { error: new Error('The field confirmPassword is required') } })
+  })
+
+  it('should returns status code 400 if password is diferent of confirmPassword', async () => {
+    httpRequest.confirmPassword = 'another_password'
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual({ statusCode: 400, body: { error: new Error('The password and the confirmPassword must be equals') } })
   })
 })
