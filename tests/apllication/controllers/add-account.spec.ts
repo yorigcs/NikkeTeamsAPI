@@ -24,7 +24,7 @@ class AddAccountController {
     const result = await this.addAccount.perform({ name, email, password, picture: name })
     if (!result) {
       return {
-        statusCode: 400,
+        statusCode: 409,
         body: { error: new Error('This account already exists') }
       }
     }
@@ -81,6 +81,12 @@ describe('AddAccountController', () => {
     httpRequest.confirmPassword = 'another_password'
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual({ statusCode: 400, body: { error: new Error('The password and the confirmPassword must be equals') } })
+  })
+
+  it('should returns status code 400 if perform to add addAcount returns false', async () => {
+    addAccountService.perform.mockResolvedValueOnce(false)
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual({ statusCode: 409, body: { error: new Error('This account already exists') } })
   })
 
   it('should returns status code 200 if perform to add addAcount returns true', async () => {
