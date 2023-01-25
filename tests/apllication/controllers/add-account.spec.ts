@@ -1,4 +1,8 @@
+
+import { AddAccountService } from '@/data/services'
+import { MockProxy, mock } from 'jest-mock-extended'
 class AddAccountController {
+  constructor (private readonly addAccount: AddAccountService) {}
   async handle (httpRequest: any): Promise<HttpResponse> {
     const requiredFields = ['name', 'email', 'password', 'confirmPassword']
     for (const field of requiredFields) {
@@ -9,11 +13,19 @@ class AddAccountController {
         }
       }
     }
-    const { password, confirmPassword } = httpRequest
+    const { name, email, password, confirmPassword } = httpRequest
     if (password !== confirmPassword) {
       return {
         statusCode: 400,
         body: { error: new Error('The password and the confirmPassword must be equals') }
+      }
+    }
+
+    const result = await this.addAccount.perform({ name, email, password, picture: name })
+    if (!result) {
+      return {
+        statusCode: 400,
+        body: { error: new Error('This account already exists') }
       }
     }
     return {
@@ -31,10 +43,15 @@ type HttpResponse = {
 describe('AddAccountController', () => {
   let httpRequest: any
   let sut: AddAccountController
+  let addAccountService: MockProxy<AddAccountService>
 
+  beforeAll(() => {
+    addAccountService = mock()
+    addAccountService.perform.mockResolvedValue(true)
+  })
   beforeEach(() => {
     httpRequest = { name: 'any_name', email: 'any_email', password: 'any_password', confirmPassword: 'any_password' }
-    sut = new AddAccountController()
+    sut = new AddAccountController(addAccountService)
   })
   it('should returns status code 422 if no name is provided', async () => {
     httpRequest.name = undefined
@@ -64,5 +81,10 @@ describe('AddAccountController', () => {
     httpRequest.confirmPassword = 'another_password'
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual({ statusCode: 400, body: { error: new Error('The password and the confirmPassword must be equals') } })
+  })
+
+  it('should returns status code 200 if perform to add addAcount returns true', async () => {
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual({ statusCode: 200, body: 'Account created successfully' })
   })
 })
