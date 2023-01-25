@@ -4,33 +4,40 @@ import { MockProxy, mock } from 'jest-mock-extended'
 class AddAccountController {
   constructor (private readonly addAccount: AddAccountService) {}
   async handle (httpRequest: any): Promise<HttpResponse> {
-    const requiredFields = ['name', 'email', 'password', 'confirmPassword']
-    for (const field of requiredFields) {
-      if (httpRequest[field] === undefined) {
-        return {
-          statusCode: 422,
-          body: { error: new Error(`The field ${field} is required`) }
+    try {
+      const requiredFields = ['name', 'email', 'password', 'confirmPassword']
+      for (const field of requiredFields) {
+        if (httpRequest[field] === undefined) {
+          return {
+            statusCode: 422,
+            body: { error: new Error(`The field ${field} is required`) }
+          }
         }
       }
-    }
-    const { name, email, password, confirmPassword } = httpRequest
-    if (password !== confirmPassword) {
-      return {
-        statusCode: 400,
-        body: { error: new Error('The password and the confirmPassword must be equals') }
+      const { name, email, password, confirmPassword } = httpRequest
+      if (password !== confirmPassword) {
+        return {
+          statusCode: 400,
+          body: { error: new Error('The password and the confirmPassword must be equals') }
+        }
       }
-    }
 
-    const result = await this.addAccount.perform({ name, email, password, picture: name })
-    if (!result) {
-      return {
-        statusCode: 409,
-        body: { error: new Error('This account already exists') }
+      const result = await this.addAccount.perform({ name, email, password, picture: name })
+      if (!result) {
+        return {
+          statusCode: 409,
+          body: { error: new Error('This account already exists') }
+        }
       }
-    }
-    return {
-      statusCode: 200,
-      body: 'Account created successfully'
+      return {
+        statusCode: 200,
+        body: 'Account created successfully'
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: { error: new Error('Infra error') }
+      }
     }
   }
 }
@@ -92,5 +99,11 @@ describe('AddAccountController', () => {
   it('should returns status code 200 if perform to add addAcount returns true', async () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual({ statusCode: 200, body: 'Account created successfully' })
+  })
+
+  it('should returns status code 500 if perform to add addAcount throws', async () => {
+    addAccountService.perform.mockRejectedValueOnce(new Error('Infra error'))
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual({ statusCode: 500, body: { error: new Error('Infra error') } })
   })
 })
