@@ -1,8 +1,18 @@
 class AddAccountController {
   async handle (httpRequest: any): Promise<HttpResponse> {
+    const requiredFields = ['name', 'email', 'password', 'confirmPassword']
+    for (const field of requiredFields) {
+      if (httpRequest[field] === undefined) {
+        return {
+          statusCode: 422,
+          body: { error: new Error(`The field ${field} is required`) }
+        }
+      }
+    }
+
     return {
-      statusCode: 422,
-      body: { error: new Error('The name field is required') }
+      statusCode: 200,
+      body: 'Account created successfully'
     }
   }
 }
@@ -12,17 +22,17 @@ type HttpResponse = {
   body: any
 }
 
-const data = {
-  name: 'any_name',
-  email: 'any_email',
-  password: 'any_password',
-  confirmPassword: 'any_password'
-}
-
 describe('AddAccountController', () => {
+  let httpRequest: any
+  let sut: AddAccountController
+
+  beforeEach(() => {
+    httpRequest = { name: 'any_name', email: 'any_email', password: 'any_password', confirmPassword: 'any_password' }
+    sut = new AddAccountController()
+  })
   it('should returns status code 422 if no name is provided', async () => {
-    const sut = new AddAccountController()
-    const httpResponse = await sut.handle(data)
-    expect(httpResponse).toEqual({ statusCode: 422, body: { error: new Error('The name field is required') } })
+    httpRequest.name = undefined
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual({ statusCode: 422, body: { error: new Error('The field name is required') } })
   })
 })
