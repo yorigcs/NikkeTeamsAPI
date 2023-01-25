@@ -40,4 +40,10 @@ describe('AddAccountController', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual({ statusCode: 422, body: { error: new Error('The field email is required') } })
   })
+
+  it('should returns status code 422 if no password email provided', async () => {
+    httpRequest.password = undefined
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual({ statusCode: 422, body: { error: new Error('The field password is required') } })
+  })
 })
