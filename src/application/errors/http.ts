@@ -5,3 +5,17 @@ export class ServerError extends Error {
     this.stack = error?.stack
   }
 }
+
+export class RequiredFieldStringError extends Error {
+  constructor (private readonly field: string) {
+    super(`The field ${field} is required`)
+    this.name = 'RequiredFieldString'
+  }
+}
+
+export class PasswordConfirmationError extends Error {
+  constructor () {
+    super('The password and the confirmPassword must be equals')
+    this.name = 'PasswordConfirmationError'
+  }
+}

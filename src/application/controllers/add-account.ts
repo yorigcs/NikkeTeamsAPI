@@ -1,5 +1,6 @@
 import { AddAccountService } from '@/data/services'
-import { HttpResponse, serverError } from '@/application/helpers'
+import { badRequest, HttpResponse, serverError } from '@/application/helpers'
+import { PasswordConfirmationError, RequiredFieldStringError } from '@/application/errors'
 
 export class AddAccountController {
   constructor (private readonly addAccount: AddAccountService) {}
@@ -8,18 +9,12 @@ export class AddAccountController {
       const requiredFields = ['name', 'email', 'password', 'confirmPassword']
       for (const field of requiredFields) {
         if (httpRequest[field] === undefined) {
-          return {
-            statusCode: 422,
-            data: new Error(`The field ${field} is required`)
-          }
+          return badRequest(new RequiredFieldStringError(field))
         }
       }
       const { name, email, password, confirmPassword } = httpRequest
       if (password !== confirmPassword) {
-        return {
-          statusCode: 400,
-          data: new Error('The password and the confirmPassword must be equals')
-        }
+        return badRequest(new PasswordConfirmationError())
       }
 
       const result = await this.addAccount.perform({ name, email, password, picture: name })

@@ -2,6 +2,7 @@
 import { AddAccountController } from '@/application/controllers'
 import { AddAccountService } from '@/data/services'
 import { MockProxy, mock } from 'jest-mock-extended'
+import { RequiredFieldStringError, PasswordConfirmationError } from '@/application/errors'
 
 describe('AddAccountController', () => {
   let httpRequest: any
@@ -16,34 +17,34 @@ describe('AddAccountController', () => {
     httpRequest = { name: 'any_name', email: 'any_email', password: 'any_password', confirmPassword: 'any_password' }
     sut = new AddAccountController(addAccountService)
   })
-  it('should returns status code 422 if no name is provided', async () => {
+  it('should returns status code 400 if no name is provided', async () => {
     httpRequest.name = undefined
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 422, data: new Error('The field name is required') })
+    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('name') })
   })
 
-  it('should returns status code 422 if no name email is provided', async () => {
+  it('should returns status code 400 if no name email is provided', async () => {
     httpRequest.email = undefined
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 422, data: new Error('The field email is required') })
+    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('email') })
   })
 
-  it('should returns status code 422 if no password is provided', async () => {
+  it('should returns status code 400 if no password is provided', async () => {
     httpRequest.password = undefined
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 422, data: new Error('The field password is required') })
+    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('password') })
   })
 
-  it('should returns status code 422 if no confirmPassword is provided', async () => {
+  it('should returns status code 400 if no confirmPassword is provided', async () => {
     httpRequest.confirmPassword = undefined
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 422, data: new Error('The field confirmPassword is required') })
+    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('confirmPassword') })
   })
 
   it('should returns status code 400 if password is diferent of confirmPassword', async () => {
     httpRequest.confirmPassword = 'another_password'
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 400, data: new Error('The password and the confirmPassword must be equals') })
+    expect(httpResponse).toEqual({ statusCode: 400, data: new PasswordConfirmationError() })
   })
 
   it('should returns status code 409 if perform to add addAcount returns false', async () => {

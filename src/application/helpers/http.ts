@@ -11,3 +11,8 @@ export const serverError = (error: Error): HttpResponse<Error> => (
     data: new ServerError(error)
   }
 )
+
+export const badRequest = (error: Error): HttpResponse<Error> => ({
+  statusCode: 400,
+  data: error
+})
