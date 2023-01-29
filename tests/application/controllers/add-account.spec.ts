@@ -2,7 +2,11 @@
 import { AddAccountController } from '@/application/controllers'
 import { AddAccountService } from '@/data/services'
 import { MockProxy, mock } from 'jest-mock-extended'
-import { RequiredFieldStringError, CompareFieldsError, ConflictError } from '@/application/errors'
+import { ConflictError } from '@/application/errors'
+import { RequiredStringValidator, CompareStringValidator } from '@/application/validations'
+
+jest.mock('@/application/validations/required-string')
+jest.mock('@/application/validations/compare-string')
 
 describe('AddAccountController', () => {
   let httpRequest: any
@@ -17,34 +21,37 @@ describe('AddAccountController', () => {
     httpRequest = { name: 'any_name', email: 'any_email', password: 'any_password', confirmPassword: 'any_password' }
     sut = new AddAccountController(addAccountService)
   })
-  it('should returns status code 400 if no name is provided', async () => {
-    httpRequest.name = undefined
+
+  it('should returns 400 if RequiredStringValidator fails', async () => {
+    const error = new Error('validation_error')
+    const RequiredStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
+      validate: jest.fn().mockReturnValueOnce(error)
+    }))
+    jest.mocked(RequiredStringValidator).mockImplementationOnce(RequiredStringValidatorSpy)
+
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('name') })
+    expect(RequiredStringValidator).toHaveBeenCalledWith('name', 'any_name')
+    expect(RequiredStringValidator).toHaveBeenCalledTimes(1)
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: error
+    })
   })
 
-  it('should returns status code 400 if no name email is provided', async () => {
-    httpRequest.email = undefined
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('email') })
-  })
+  it('should returns status code 400 if CompareStringValidator fails', async () => {
+    const error = new Error('validation_error')
+    const CompareStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
+      validate: jest.fn().mockReturnValueOnce(error)
+    }))
+    jest.mocked(CompareStringValidator).mockImplementationOnce(CompareStringValidatorSpy)
 
-  it('should returns status code 400 if no password is provided', async () => {
-    httpRequest.password = undefined
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('password') })
-  })
-
-  it('should returns status code 400 if no confirmPassword is provided', async () => {
-    httpRequest.confirmPassword = undefined
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 400, data: new RequiredFieldStringError('confirmPassword') })
-  })
-
-  it('should returns status code 400 if password is diferent of confirmPassword', async () => {
-    httpRequest.confirmPassword = 'another_password'
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 400, data: new CompareFieldsError('any_password', 'another_password') })
+    expect(CompareStringValidator).toHaveBeenCalledWith('any_password', 'any_password')
+    expect(CompareStringValidator).toHaveBeenCalledTimes(1)
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: error
+    })
   })
 
   it('should returns status code 409 if perform to add addAcount returns false', async () => {
