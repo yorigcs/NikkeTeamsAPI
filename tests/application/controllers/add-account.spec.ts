@@ -2,7 +2,7 @@
 import { AddAccountController } from '@/application/controllers'
 import { AddAccountService } from '@/data/services'
 import { MockProxy, mock } from 'jest-mock-extended'
-import { RequiredFieldStringError, PasswordConfirmationError } from '@/application/errors'
+import { RequiredFieldStringError, PasswordConfirmationError, ConflictError } from '@/application/errors'
 
 describe('AddAccountController', () => {
   let httpRequest: any
@@ -50,7 +50,7 @@ describe('AddAccountController', () => {
   it('should returns status code 409 if perform to add addAcount returns false', async () => {
     addAccountService.perform.mockResolvedValueOnce(false)
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 409, data: new Error('This account already exists') })
+    expect(httpResponse).toEqual({ statusCode: 409, data: new ConflictError('This account already exists') })
   })
 
   it('should returns status code 200 if perform to add addAcount returns true', async () => {

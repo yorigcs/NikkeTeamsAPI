@@ -1,5 +1,5 @@
 import { AddAccountService } from '@/data/services'
-import { badRequest, HttpResponse, serverError } from '@/application/helpers'
+import { badRequest, conflict, HttpResponse, serverError } from '@/application/helpers'
 import { PasswordConfirmationError, RequiredFieldStringError } from '@/application/errors'
 
 export class AddAccountController {
@@ -18,18 +18,14 @@ export class AddAccountController {
       }
 
       const result = await this.addAccount.perform({ name, email, password, picture: name })
-      if (!result) {
-        return {
-          statusCode: 409,
-          data: new Error('This account already exists')
-        }
-      }
+      if (!result) return conflict('This account already exists')
+
       return {
         statusCode: 200,
         data: 'Account created successfully'
       }
     } catch (error) {
-      return serverError(new Error('Infra error'))
+      return serverError(error)
     }
   }
 }

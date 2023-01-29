@@ -19,3 +19,10 @@ export class PasswordConfirmationError extends Error {
     this.name = 'PasswordConfirmationError'
   }
 }
+
+export class ConflictError extends Error {
+  constructor (private readonly msg: string) {
+    super(msg)
+    this.name = 'ConflictError'
+  }
+}
