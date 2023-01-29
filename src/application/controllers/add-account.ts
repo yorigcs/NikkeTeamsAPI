@@ -1,5 +1,5 @@
 import { AddAccountService } from '@/data/services'
-import { HttpResponse } from '../helpers'
+import { HttpResponse, serverError } from '@/application/helpers'
 
 export class AddAccountController {
   constructor (private readonly addAccount: AddAccountService) {}
@@ -10,7 +10,7 @@ export class AddAccountController {
         if (httpRequest[field] === undefined) {
           return {
             statusCode: 422,
-            body: { error: new Error(`The field ${field} is required`) }
+            data: new Error(`The field ${field} is required`)
           }
         }
       }
@@ -18,7 +18,7 @@ export class AddAccountController {
       if (password !== confirmPassword) {
         return {
           statusCode: 400,
-          body: { error: new Error('The password and the confirmPassword must be equals') }
+          data: new Error('The password and the confirmPassword must be equals')
         }
       }
 
@@ -26,18 +26,15 @@ export class AddAccountController {
       if (!result) {
         return {
           statusCode: 409,
-          body: { error: new Error('This account already exists') }
+          data: new Error('This account already exists')
         }
       }
       return {
         statusCode: 200,
-        body: 'Account created successfully'
+        data: 'Account created successfully'
       }
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: new Error('Infra error') }
-      }
+      return serverError(new Error('Infra error'))
     }
   }
 }
