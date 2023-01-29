@@ -3,10 +3,9 @@ import { AddAccountController } from '@/application/controllers'
 import { AddAccountService } from '@/data/services'
 import { MockProxy, mock } from 'jest-mock-extended'
 import { ConflictError } from '@/application/errors'
-import { RequiredStringValidator, CompareStringValidator } from '@/application/validations'
+import { RequiredStringValidator, CompareStringValidator, ValidationComposite } from '@/application/validations'
 
-jest.mock('@/application/validations/required-string')
-jest.mock('@/application/validations/compare-string')
+jest.mock('@/application/validations/composite')
 
 describe('AddAccountController', () => {
   let httpRequest: any
@@ -22,32 +21,24 @@ describe('AddAccountController', () => {
     sut = new AddAccountController(addAccountService)
   })
 
-  it('should returns 400 if RequiredStringValidator fails', async () => {
+  it('should returns 400 if validation fails', async () => {
     const error = new Error('validation_error')
-    const RequiredStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
+    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
       validate: jest.fn().mockReturnValueOnce(error)
     }))
-    jest.mocked(RequiredStringValidator).mockImplementationOnce(RequiredStringValidatorSpy)
+    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy)
 
     const httpResponse = await sut.handle(httpRequest)
-    expect(RequiredStringValidator).toHaveBeenCalledWith('name', 'any_name')
-    expect(RequiredStringValidator).toHaveBeenCalledTimes(1)
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: error
-    })
-  })
+    expect(ValidationComposite).toHaveBeenCalledTimes(1)
+    expect(ValidationComposite).toHaveBeenCalledWith([
+      new RequiredStringValidator('name', 'any_name'),
+      new RequiredStringValidator('email', 'any_email'),
+      new RequiredStringValidator('password', 'any_password'),
+      new RequiredStringValidator('confirmPassword', 'any_password'),
+      new CompareStringValidator('any_password', 'any_password')
 
-  it('should returns status code 400 if CompareStringValidator fails', async () => {
-    const error = new Error('validation_error')
-    const CompareStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
-      validate: jest.fn().mockReturnValueOnce(error)
-    }))
-    jest.mocked(CompareStringValidator).mockImplementationOnce(CompareStringValidatorSpy)
+    ])
 
-    const httpResponse = await sut.handle(httpRequest)
-    expect(CompareStringValidator).toHaveBeenCalledWith('any_password', 'any_password')
-    expect(CompareStringValidator).toHaveBeenCalledTimes(1)
     expect(httpResponse).toEqual({
       statusCode: 400,
       data: error

@@ -1,6 +1,6 @@
 import { AddAccountService } from '@/data/services'
 import { badRequest, conflict, HttpResponse, ok, serverError } from '@/application/helpers'
-import { RequiredStringValidator, CompareStringValidator } from '@/application/validations'
+import { RequiredStringValidator, CompareStringValidator, ValidationComposite } from '@/application/validations'
 
 type HttpRequest = {
   name: string
@@ -29,12 +29,11 @@ export class AddAccountController {
   }
 
   validate (httpRequest: HttpRequest): Error | undefined {
+    const validators = []
     for (const field in httpRequest) {
-      const error = new RequiredStringValidator(field, httpRequest[field as keyof HttpRequest]).validate()
-      if (error !== undefined) return error
+      validators.push(new RequiredStringValidator(field, httpRequest[field as keyof HttpRequest]))
     }
-
-    const error = new CompareStringValidator(httpRequest.password, httpRequest.confirmPassword).validate()
-    if (error !== undefined) return error
+    validators.push(new CompareStringValidator(httpRequest.password, httpRequest.confirmPassword))
+    return new ValidationComposite(validators).validate()
   }
 }
