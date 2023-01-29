@@ -21,3 +21,8 @@ export const serverError = (error: unknown): HttpResponse<Error> => (
     data: new ServerError(error instanceof Error ? error : undefined)
   }
 )
+
+export const ok = <T = any> (data: T): HttpResponse<T> => ({
+  statusCode: 200,
+  data
+})
