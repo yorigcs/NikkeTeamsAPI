@@ -1,7 +1,6 @@
 import { AddAccountService } from '@/data/services'
 import { badRequest, conflict, HttpResponse, ok, serverError } from '@/application/helpers'
-import { PasswordConfirmationError } from '@/application/errors'
-import { RequiredStringValidator } from '@/application/validations'
+import { RequiredStringValidator, CompareStringValidator } from '@/application/validations'
 
 type HttpRequest = {
   name: string
@@ -34,7 +33,8 @@ export class AddAccountController {
       const error = new RequiredStringValidator(field, httpRequest[field as keyof HttpRequest]).validate()
       if (error !== undefined) return error
     }
-    const { password, confirmPassword } = httpRequest
-    if (password !== confirmPassword) return new PasswordConfirmationError()
+
+    const error = new CompareStringValidator(httpRequest.password, httpRequest.confirmPassword).validate()
+    if (error !== undefined) return error
   }
 }

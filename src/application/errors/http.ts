@@ -13,10 +13,10 @@ export class RequiredFieldStringError extends Error {
   }
 }
 
-export class PasswordConfirmationError extends Error {
-  constructor () {
-    super('The password and the confirmPassword must be equals')
-    this.name = 'PasswordConfirmationError'
+export class CompareFieldsError extends Error {
+  constructor (private readonly field: string, private readonly fieldToCompare: string) {
+    super(`The field ${field} must be equals to field ${fieldToCompare}`)
+    this.name = 'CompareFieldsError'
   }
 }
 

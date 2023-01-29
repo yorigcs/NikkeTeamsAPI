@@ -2,7 +2,7 @@
 import { AddAccountController } from '@/application/controllers'
 import { AddAccountService } from '@/data/services'
 import { MockProxy, mock } from 'jest-mock-extended'
-import { RequiredFieldStringError, PasswordConfirmationError, ConflictError } from '@/application/errors'
+import { RequiredFieldStringError, CompareFieldsError, ConflictError } from '@/application/errors'
 
 describe('AddAccountController', () => {
   let httpRequest: any
@@ -44,7 +44,7 @@ describe('AddAccountController', () => {
   it('should returns status code 400 if password is diferent of confirmPassword', async () => {
     httpRequest.confirmPassword = 'another_password'
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 400, data: new PasswordConfirmationError() })
+    expect(httpResponse).toEqual({ statusCode: 400, data: new CompareFieldsError('any_password', 'another_password') })
   })
 
   it('should returns status code 409 if perform to add addAcount returns false', async () => {
