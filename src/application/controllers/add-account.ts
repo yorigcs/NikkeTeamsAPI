@@ -3,10 +3,10 @@ import { badRequest, conflict, HttpResponse, ok, serverError } from '@/applicati
 import { PasswordConfirmationError, RequiredFieldStringError } from '@/application/errors'
 
 type HttpRequest = {
-  name: string | undefined
-  email: string | undefined
-  password: string | undefined
-  confirmPassword: string | undefined
+  name: string
+  email: string
+  password: string
+  confirmPassword: string
 }
 
 type Model = Error | string
@@ -15,20 +15,24 @@ export class AddAccountController {
   constructor (private readonly addAccount: AddAccountService) {}
   async handle (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
     try {
-      const { name, email, password, confirmPassword } = httpRequest
-      if (name === undefined) return badRequest(new RequiredFieldStringError('name'))
-      if (email === undefined) return badRequest(new RequiredFieldStringError('email'))
-      if (password === undefined) return badRequest(new RequiredFieldStringError('password'))
-      if (confirmPassword === undefined) return badRequest(new RequiredFieldStringError('confirmPassword'))
+      const error = this.validate(httpRequest)
+      if (error !== undefined) return badRequest(error)
+      const { name, email, password } = httpRequest
 
-      if (password !== confirmPassword) return badRequest(new PasswordConfirmationError())
-
-      const result = await this.addAccount.perform({ name, email, password, picture: name })
+      const result = await this.addAccount.perform({ name, email, password, picture: name[0].toUpperCase() })
       if (!result) return conflict('This account already exists')
 
       return ok('Account created successfully')
     } catch (error) {
       return serverError(error)
     }
+  }
+
+  validate ({ name, email, password, confirmPassword }: HttpRequest): Error | undefined {
+    if (name === undefined) return new RequiredFieldStringError('name')
+    if (email === undefined) return new RequiredFieldStringError('email')
+    if (password === undefined) return new RequiredFieldStringError('password')
+    if (confirmPassword === undefined) return new RequiredFieldStringError('confirmPassword')
+    if (password !== confirmPassword) return new PasswordConfirmationError()
   }
 }
