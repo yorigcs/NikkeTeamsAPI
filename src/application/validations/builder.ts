@@ -1,4 +1,4 @@
-import { RequiredStringValidator, Validator } from '@/application/validations'
+import { CompareStringValidator, RequiredStringValidator, Validator } from '@/application/validations'
 
 export class ValidationBuild {
   private constructor (
@@ -13,6 +13,11 @@ export class ValidationBuild {
 
   required (): ValidationBuild {
     this.validators.push(new RequiredStringValidator(this.fieldName, this.value))
+    return this
+  }
+
+  compareTo (valueToCompare: string): ValidationBuild {
+    this.validators.push(new CompareStringValidator(this.value, valueToCompare))
     return this
   }
 
