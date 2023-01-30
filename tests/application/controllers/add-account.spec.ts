@@ -3,7 +3,7 @@ import { AddAccountController } from '@/application/controllers'
 import { AddAccountService } from '@/data/services'
 import { MockProxy, mock } from 'jest-mock-extended'
 import { ConflictError } from '@/application/errors'
-import { RequiredStringValidator, CompareStringValidator, ValidationComposite } from '@/application/validations'
+import { RequiredStringValidator, CompareStringValidator, ValidationComposite, EmailValidator } from '@/application/validations'
 
 jest.mock('@/application/validations/composite')
 
@@ -33,6 +33,7 @@ describe('AddAccountController', () => {
     expect(ValidationComposite).toHaveBeenCalledWith([
       new RequiredStringValidator('name', 'any_name'),
       new RequiredStringValidator('email', 'any_email'),
+      new EmailValidator('any_email'),
       new RequiredStringValidator('password', 'any_password'),
       new RequiredStringValidator('confirmPassword', 'any_password'),
       new CompareStringValidator('any_password', 'any_password')

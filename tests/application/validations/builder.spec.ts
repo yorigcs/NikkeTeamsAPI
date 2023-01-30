@@ -1,4 +1,4 @@
-import { CompareStringValidator, RequiredStringValidator, ValidationBuild } from '@/application/validations'
+import { CompareStringValidator, EmailValidator, RequiredStringValidator, ValidationBuild } from '@/application/validations'
 
 describe('ValidationBuild', () => {
   it('should returns a RequiredStringValidator', () => {
@@ -9,5 +9,10 @@ describe('ValidationBuild', () => {
   it('should returns a CompareStringValidator', () => {
     const sut = ValidationBuild.of({ fieldName: 'name', value: 'any_name' }).compareTo('another_name').build()
     expect(sut).toEqual([new CompareStringValidator('any_name', 'another_name')])
+  })
+
+  it('should returns a EmailValidator', () => {
+    const sut = ValidationBuild.of({ fieldName: 'email', value: 'any_email' }).email().build()
+    expect(sut).toEqual([new EmailValidator('any_email')])
   })
 })

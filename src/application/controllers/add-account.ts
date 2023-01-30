@@ -1,6 +1,6 @@
 import { AddAccountService } from '@/data/services'
 import { badRequest, conflict, HttpResponse, ok, serverError } from '@/application/helpers'
-import { ValidationComposite, ValidationBuild } from '@/application/validations'
+import { ValidationComposite, ValidationBuild as builder } from '@/application/validations'
 
 type HttpRequest = {
   name: string
@@ -30,10 +30,10 @@ export class AddAccountController {
 
   validate ({ name, email, password, confirmPassword }: HttpRequest): Error | undefined {
     return new ValidationComposite([
-      ...ValidationBuild.of({ fieldName: 'name', value: name }).required().build(),
-      ...ValidationBuild.of({ fieldName: 'email', value: email }).required().build(),
-      ...ValidationBuild.of({ fieldName: 'password', value: password }).required().build(),
-      ...ValidationBuild.of({ fieldName: 'confirmPassword', value: confirmPassword }).required().compareTo(password).build()
+      ...builder.of({ fieldName: 'name', value: name }).required().build(),
+      ...builder.of({ fieldName: 'email', value: email }).required().email().build(),
+      ...builder.of({ fieldName: 'password', value: password }).required().build(),
+      ...builder.of({ fieldName: 'confirmPassword', value: confirmPassword }).required().compareTo(password).build()
     ]).validate()
   }
 }
