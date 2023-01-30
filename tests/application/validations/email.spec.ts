@@ -1,12 +1,6 @@
 import { EmailError } from '@/application/errors'
+import { EmailValidator } from '@/application/validations'
 
-class EmailValidator {
-  constructor (private readonly email: string) {}
-  validate (): Error | undefined {
-    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-    if (!regex.test(this.email)) return new EmailError()
-  }
-}
 describe('EmailValidator', () => {
   it('should returns undefinded if email is valid', () => {
     const sut = new EmailValidator('valid@email.com')
