@@ -1,6 +1,7 @@
 import { AddAccountService } from '@/data/services'
-import { badRequest, conflict, HttpResponse, ok, serverError } from '@/application/helpers'
-import { ValidationComposite, ValidationBuild as builder } from '@/application/validations'
+import { conflict, HttpResponse, ok } from '@/application/helpers'
+import { ValidationBuild as Builder, Validator } from '@/application/validations'
+import { Controller } from '@/application/controllers'
 
 type HttpRequest = {
   name: string
@@ -11,29 +12,25 @@ type HttpRequest = {
 
 type Model = Error | string
 
-export class AddAccountController {
-  constructor (private readonly addAccount: AddAccountService) {}
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
-    try {
-      const error = this.validate(httpRequest)
-      if (error !== undefined) return badRequest(error)
-      const { name, email, password } = httpRequest
-
-      const result = await this.addAccount.perform({ name, email, password, picture: name[0].toUpperCase() })
-      if (!result) return conflict('This account already exists')
-
-      return ok('Account created successfully')
-    } catch (error) {
-      return serverError(error)
-    }
+export class AddAccountController extends Controller {
+  constructor (private readonly addAccount: AddAccountService) {
+    super()
   }
 
-  validate ({ name, email, password, confirmPassword }: HttpRequest): Error | undefined {
-    return new ValidationComposite([
-      ...builder.of({ fieldName: 'name', value: name }).required().build(),
-      ...builder.of({ fieldName: 'email', value: email }).required().email().build(),
-      ...builder.of({ fieldName: 'password', value: password }).required().build(),
-      ...builder.of({ fieldName: 'confirmPassword', value: confirmPassword }).required().compareTo(password).build()
-    ]).validate()
+  async perform ({ name, email, password }: HttpRequest): Promise<HttpResponse<Model>> {
+    const result = await this.addAccount.perform({ name, email, password, picture: name[0].toUpperCase() })
+
+    if (!result) return conflict('This account already exists')
+
+    return ok('Account created successfully')
+  }
+
+  override buildValidators ({ name, email, password, confirmPassword }: HttpRequest): Validator[] {
+    return [
+      ...Builder.of({ fieldName: 'name', value: name }).required().build(),
+      ...Builder.of({ fieldName: 'email', value: email }).required().email().build(),
+      ...Builder.of({ fieldName: 'password', value: password }).required().build(),
+      ...Builder.of({ fieldName: 'confirmPassword', value: confirmPassword }).required().compareTo(password).build()
+    ]
   }
 }
