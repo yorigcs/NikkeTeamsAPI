@@ -12,6 +12,8 @@
     "test:staged": "npm t -- --findRelatedTests",
     "test:coverage": "npm t -- --coverage",
     "dev": "ts-node-dev --respawn --transpile-only --clear -r dotenv/config src/main",
+    "start": "node -r dotenv/config dist/main",
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev"
   },

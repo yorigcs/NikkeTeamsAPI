@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "incremental": true,                         /* Save .tsbuildinfo files to allow for incremental compilation of projects. */
     "target": "ES2022",                          /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "experimentalDecorators": true,              /* Enable experimental support for TC39 stage 2 draft decorators. */
@@ -21,5 +22,5 @@
     "noImplicitOverride": true,                  /* Ensure overriding members in derived classes are marked with an override modifier. */
     "skipLibCheck": true                         /* Skip type checking all .d.ts files. */
   },
-  //"include": ["src", "tests"]
+  "include": ["src", "tests"]
 }
