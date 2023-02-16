@@ -1,7 +1,7 @@
+import { adapterExpressController as adapt } from '@/infra/http'
 import { Router } from 'express'
+import { makeAddAccountController } from '../factories/controllers'
 
 export default (router: Router): void => {
-  router.post('/sign-up', (_req, res) => {
-    res.send({ data: 'okay' })
-  })
+  router.post('/sign-up', adapt(makeAddAccountController()))
 }
