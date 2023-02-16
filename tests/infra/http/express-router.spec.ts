@@ -7,7 +7,7 @@ class ExpressRouter {
   constructor (private readonly controller: Controller) {}
   async adapt (req: Request, res: Response): Promise<void> {
     const { statusCode, data } = await this.controller.handle({ ...req.body })
-    res.status(statusCode).json(data)
+    statusCode === 200 ? res.status(statusCode).json(data) : res.status(statusCode).json({ error: data.message })
   }
 }
 describe('ExpressRouter', () => {
@@ -38,6 +38,20 @@ describe('ExpressRouter', () => {
     expect(res.status).toHaveBeenCalledTimes(1)
 
     expect(res.json).toHaveBeenCalledWith({ data: 'any_data' })
+    expect(res.json).toHaveBeenCalledTimes(1)
+  })
+
+  it('should respond with Error and statusCode 400', async () => {
+    controller.handle.mockResolvedValueOnce({
+      statusCode: 400,
+      data: new Error('any_error')
+    })
+    await sut.adapt(req, res)
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.status).toHaveBeenCalledTimes(1)
+
+    expect(res.json).toHaveBeenCalledWith({ error: 'any_error' })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
 })
