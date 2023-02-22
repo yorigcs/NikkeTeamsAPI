@@ -38,11 +38,17 @@ describe('Controller', () => {
     expect(httpResponse).toEqual({ statusCode: 400, data: error })
   })
 
-  it('should returns status code 500 if perform  throws', async () => {
+  it('should returns status code 500 if perform  throws an error', async () => {
     const error = new Error('perform_error')
     jest.spyOn(sut, 'perform').mockRejectedValueOnce(error)
     const httpResponse = await sut.handle('any_value')
     expect(httpResponse).toEqual({ statusCode: 500, data: new ServerError(error) })
+  })
+
+  it('should returns status code 500 if perform throws undefined', async () => {
+    jest.spyOn(sut, 'perform').mockRejectedValueOnce(undefined)
+    const httpResponse = await sut.handle('any_value')
+    expect(httpResponse).toEqual({ statusCode: 500, data: new ServerError(undefined) })
   })
 
   it('should returns same result as perform', async () => {
