@@ -3,7 +3,8 @@ import prismaConnection from '@/infra/repo/prisma'
 
 export class UserAccountRepository implements LoadAccountByEmailRepository, SaveAccountRepository {
   async load ({ email }: LoadAccountByEmailRepository.Input): Promise<LoadAccountByEmailRepository.Output> {
-    return await prismaConnection.users.findUnique({ where: { email } }) !== null
+    const user = await prismaConnection.users.findUnique({ where: { email } })
+    return (user !== undefined && user !== null)
   }
 
   async save (input: SaveAccountRepository.Input): Promise<void> {
