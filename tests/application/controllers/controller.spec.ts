@@ -8,7 +8,7 @@ jest.mock('@/application/validations/composite')
 
 class ControllerStub extends Controller {
   result: HttpResponse = {
-    statusCode: 200,
+    statusCode: 201,
     data: 'any_data'
   }
 

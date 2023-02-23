@@ -45,8 +45,8 @@ describe('AddAccountController', () => {
     expect(httpResponse).toEqual({ statusCode: 409, data: new ConflictError('This account already exists') })
   })
 
-  it('should returns status code 200 if perform to add addAcount returns true', async () => {
+  it('should returns status code 201 if perform to add addAcount returns true', async () => {
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual({ statusCode: 200, data: 'Account created successfully' })
+    expect(httpResponse).toEqual({ statusCode: 201, data: 'Account created successfully' })
   })
 })

@@ -16,12 +16,12 @@ describe('Sign-up Routes', () => {
     beforeAll(() => { httpRequestData = { name: 'any_name', email: 'any_mail@mail.com', password: 'any_pass', confirmPassword: 'any_pass' } })
     beforeEach(async () => { await prismaConnection.users.deleteMany() })
 
-    it('should response with status 200 and body with message "Account created successfully"', async () => {
+    it('should response with status 201 and body with message "Account created successfully"', async () => {
       const { status, body } = await request(app)
         .post('/api/sign-up')
         .send(httpRequestData)
 
-      expect(status).toBe(200)
+      expect(status).toBe(201)
       expect(body).toBe('Account created successfully')
     })
 

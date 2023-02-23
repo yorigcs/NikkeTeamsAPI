@@ -1,5 +1,5 @@
 import { AddAccountService } from '@/data/services'
-import { conflict, HttpResponse, ok } from '@/application/helpers'
+import { conflict, created, HttpResponse } from '@/application/helpers'
 import { ValidationBuild as Builder, Validator } from '@/application/validations'
 import { Controller } from '@/application/controllers'
 
@@ -22,7 +22,7 @@ export class AddAccountController extends Controller {
 
     if (!result) return conflict('This account already exists')
 
-    return ok('Account created successfully')
+    return created('Account created successfully')
   }
 
   override buildValidators ({ name, email, password, confirmPassword }: HttpRequest): Validator[] {

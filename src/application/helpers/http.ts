@@ -22,7 +22,7 @@ export const serverError = (error: unknown): HttpResponse<Error> => (
   }
 )
 
-export const ok = <T = any> (data: T): HttpResponse<T> => ({
-  statusCode: 200,
+export const created = <T = any> (data: T): HttpResponse<T> => ({
+  statusCode: 201,
   data
 })
