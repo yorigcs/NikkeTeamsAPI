@@ -1,4 +1,4 @@
-import { LoadAccountByEmailRepository, SaveAccountRepository } from '@/data/contracts/repo'
+import { LoadAccountByEmailRepository, SaveAccountRepository } from '@/domain/contracts/repo'
 import prismaConnection from '@/infra/repo/prisma'
 
 export class UserAccountRepository implements LoadAccountByEmailRepository, SaveAccountRepository {

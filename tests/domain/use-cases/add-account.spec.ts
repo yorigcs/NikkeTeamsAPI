@@ -1,15 +1,20 @@
-import { AddAccountService } from '@/data/services'
-import { Encrypter, UUID } from '@/data/contracts/crypto'
-import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/data/contracts/repo'
-import { AddAcount } from '@/domain/feature'
+import { AddAccount, setupAddAccount } from '@/domain/use-cases'
+import { Encrypter, UUID } from '@/domain/contracts/crypto'
+import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/domain/contracts/repo'
 import { mock, MockProxy } from 'jest-mock-extended'
 
-describe('AddAccountService', () => {
+type Params = {
+  name: string
+  email: string
+  password: string
+  picture: string
+}
+describe('AddAccountUseCase', () => {
   let encrypter: MockProxy<Encrypter>
   let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
   let uuid: MockProxy<UUID>
-  let sut: AddAccountService
-  let accountData: AddAcount.Params
+  let sut: AddAccount
+  let accountData: Params
 
   beforeAll(() => {
     accountData = { email: 'any@mail.com', name: 'any_name', password: 'any_password', picture: 'any_picture' }
@@ -22,59 +27,59 @@ describe('AddAccountService', () => {
   })
 
   beforeEach(() => {
-    sut = new AddAccountService(encrypter, userAccountRepo, uuid)
+    sut = setupAddAccount(encrypter, userAccountRepo, uuid)
   })
 
   it('should call Encrypter with correct params', async () => {
-    await sut.perform(accountData)
+    await sut(accountData)
     expect(encrypter.encrypt).toHaveBeenCalledWith({ plainText: 'any_password' })
     expect(encrypter.encrypt).toHaveBeenCalledTimes(1)
   })
 
   it('should throws if AddAccountError if Encrypter throws', async () => {
     encrypter.encrypt.mockRejectedValueOnce(new Error('Encrypter error'))
-    const promise = sut.perform(accountData)
+    const promise = sut(accountData)
     await expect(promise).rejects.toThrow(new Error('Encrypter error'))
   })
 
   it('should throws if CreateUserAccount throws', async () => {
     userAccountRepo.save.mockRejectedValueOnce(new Error('CreateUserAccount error'))
-    const promise = sut.perform(accountData)
+    const promise = sut(accountData)
     await expect(promise).rejects.toThrow(new Error('CreateUserAccount error'))
   })
 
   it('should call saveAccountRepo with correct params', async () => {
-    await sut.perform(accountData)
+    await sut(accountData)
     expect(userAccountRepo.save).toHaveBeenCalledWith({ id: 'any_id', ...accountData, password: 'hashedPassword' })
     expect(userAccountRepo.save).toHaveBeenCalledTimes(1)
   })
 
   it('should call loadAccountByEmailRepo with correct params', async () => {
-    await sut.perform(accountData)
+    await sut(accountData)
     expect(userAccountRepo.load).toHaveBeenCalledWith({ email: accountData.email })
     expect(userAccountRepo.load).toHaveBeenCalledTimes(1)
   })
 
   it('should not call saveAccountRepo if loadAccountByEmailRepo is true', async () => {
     userAccountRepo.load.mockResolvedValueOnce(true)
-    await sut.perform(accountData)
+    await sut(accountData)
     expect(userAccountRepo.save).toHaveBeenCalledTimes(0)
   })
 
   it('should call Uuid with correct params', async () => {
-    await sut.perform(accountData)
+    await sut(accountData)
     expect(uuid.generate).toHaveBeenCalledWith({})
     expect(uuid.generate).toHaveBeenCalledTimes(1)
   })
 
   it('should rethrows if Uuid throws', async () => {
     uuid.generate.mockRejectedValueOnce(new Error('Uuid error'))
-    const promise = sut.perform(accountData)
+    const promise = sut(accountData)
     await expect(promise).rejects.toThrow(new Error('Uuid error'))
   })
 
   it('should returns true if sucess', async () => {
-    const promise = await sut.perform(accountData)
+    const promise = await sut(accountData)
     expect(promise).toBe(true)
   })
 })

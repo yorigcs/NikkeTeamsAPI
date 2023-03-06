@@ -1,4 +1,4 @@
-import { Encrypter } from '@/data/contracts/crypto'
+import { Encrypter } from '@/domain/contracts/crypto'
 import { hash } from 'bcrypt'
 
 export class CryptoHandler implements Encrypter {

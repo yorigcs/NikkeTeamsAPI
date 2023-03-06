@@ -1,7 +1,5 @@
 
 import { AddAccountController } from '@/application/controllers'
-import { AddAccountService } from '@/data/services'
-import { MockProxy, mock } from 'jest-mock-extended'
 import { ConflictError } from '@/application/errors'
 import { RequiredStringValidator, CompareStringValidator, EmailValidator } from '@/application/validations'
 
@@ -15,15 +13,15 @@ type HttpRequest = {
 describe('AddAccountController', () => {
   let httpRequest: HttpRequest
   let sut: AddAccountController
-  let addAccountService: MockProxy<AddAccountService>
+  let addAccount: jest.Mock
 
   beforeAll(() => {
-    addAccountService = mock()
-    addAccountService.perform.mockResolvedValue(true)
+    addAccount = jest.fn()
+    addAccount.mockResolvedValue(true)
   })
   beforeEach(() => {
     httpRequest = { name: 'any_name', email: 'any@email.com', password: 'any_password', confirmPassword: 'any_password' }
-    sut = new AddAccountController(addAccountService)
+    sut = new AddAccountController(addAccount)
   })
 
   it('should build validators correctly', async () => {
@@ -40,7 +38,7 @@ describe('AddAccountController', () => {
   })
 
   it('should returns status code 409 if perform to add addAcount returns false', async () => {
-    addAccountService.perform.mockResolvedValueOnce(false)
+    addAccount.mockResolvedValueOnce(false)
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual({ statusCode: 409, data: new ConflictError('This account already exists') })
   })
