@@ -1,5 +1,5 @@
 export class UserProfile {
-  initials?: string
+  initials = ''
   constructor (readonly name: string) {
     this.setInitials()
   }

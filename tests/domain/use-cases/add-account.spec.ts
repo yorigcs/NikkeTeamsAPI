@@ -7,7 +7,6 @@ type Params = {
   name: string
   email: string
   password: string
-  picture: string
 }
 describe('AddAccountUseCase', () => {
   let encrypter: MockProxy<Encrypter>
@@ -17,7 +16,7 @@ describe('AddAccountUseCase', () => {
   let accountData: Params
 
   beforeAll(() => {
-    accountData = { email: 'any@mail.com', name: 'any_name', password: 'any_password', picture: 'any_picture' }
+    accountData = { email: 'any@mail.com', name: 'any name', password: 'any_password' }
     encrypter = mock()
     encrypter.encrypt.mockResolvedValue('hashedPassword')
     userAccountRepo = mock()
@@ -50,7 +49,7 @@ describe('AddAccountUseCase', () => {
 
   it('should call saveAccountRepo with correct params', async () => {
     await sut(accountData)
-    expect(userAccountRepo.save).toHaveBeenCalledWith({ id: 'any_id', ...accountData, password: 'hashedPassword' })
+    expect(userAccountRepo.save).toHaveBeenCalledWith({ id: 'any_id', ...accountData, password: 'hashedPassword', picture: 'AN' })
     expect(userAccountRepo.save).toHaveBeenCalledTimes(1)
   })
 

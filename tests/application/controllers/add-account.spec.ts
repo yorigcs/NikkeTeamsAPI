@@ -1,5 +1,5 @@
 
-import { AddAccountController } from '@/application/controllers'
+import { AddAccountController, Controller } from '@/application/controllers'
 import { ConflictError } from '@/application/errors'
 import { RequiredStringValidator, CompareStringValidator, EmailValidator } from '@/application/validations'
 
@@ -22,6 +22,10 @@ describe('AddAccountController', () => {
   beforeEach(() => {
     httpRequest = { name: 'any_name', email: 'any@email.com', password: 'any_password', confirmPassword: 'any_password' }
     sut = new AddAccountController(addAccount)
+  })
+
+  it('should extends controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should build validators correctly', async () => {

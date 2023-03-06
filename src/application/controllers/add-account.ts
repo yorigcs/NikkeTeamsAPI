@@ -12,10 +12,8 @@ export class AddAccountController extends Controller {
   }
 
   async perform ({ name, email, password }: HttpRequest): Promise<HttpResponse<Model>> {
-    const result = await this.addAccount({ name, email, password, picture: name[0].toUpperCase() })
-
+    const result = await this.addAccount({ name, email, password })
     if (!result) return conflict('This account already exists')
-
     return created('Account created successfully')
   }
 
