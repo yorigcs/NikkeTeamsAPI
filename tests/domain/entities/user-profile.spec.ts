@@ -1,13 +1,4 @@
-export class UserProfile {
-  initials?: string
-  constructor (readonly name: string) {
-    this.setInitials()
-  }
-
-  setInitials (): void {
-    this.initials = this.name.split(' ').map(partialName => partialName[0]?.toUpperCase()).slice(0, 2).join('')
-  }
-}
+import { UserProfile } from '@/domain/entities'
 
 describe('Profile', () => {
   it('initials should be TA', () => {
