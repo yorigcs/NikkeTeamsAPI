@@ -1,10 +1,10 @@
-export interface Encrypter {
-  encrypt: (params: Encrypter.Params) => Promise<Encrypter.Result>
+export interface Hasher {
+  hash: (params: Hasher.Input) => Promise<Hasher.Output>
 }
 
-export namespace Encrypter {
-  export type Params = {
+export namespace Hasher {
+  export type Input = {
     plainText: string
   }
-  export type Result = string
+  export type Output = string
 }

@@ -1,9 +1,9 @@
-import { Encrypter } from '@/domain/contracts/crypto'
-import { hash } from 'bcrypt'
+import { Hasher } from '@/domain/contracts/crypto'
+import bcrypt from 'bcrypt'
 
-export class CryptoHandler implements Encrypter {
-  async encrypt ({ plainText }: Encrypter.Params): Promise<Encrypter.Result> {
+export class HashHandler implements Hasher {
+  async hash ({ plainText }: Hasher.Input): Promise<Hasher.Output> {
     const salt = 12
-    return await hash(plainText, salt)
+    return await bcrypt.hash(plainText, salt)
   }
 }

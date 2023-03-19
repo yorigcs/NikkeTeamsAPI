@@ -1,5 +1,5 @@
-import { CryptoHandler } from '@/infra/crypto'
+import { HashHandler } from '@/infra/crypto'
 
-export const makeCryptoHandler = (): CryptoHandler => {
-  return new CryptoHandler()
+export const makeHashHandler = (): HashHandler => {
+  return new HashHandler()
 }

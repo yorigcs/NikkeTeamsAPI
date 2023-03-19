@@ -1,5 +1,5 @@
 import { AddAccount, setupAddAccount } from '@/domain/use-cases'
-import { Encrypter, UUID } from '@/domain/contracts/crypto'
+import { Hasher, UUID } from '@/domain/contracts/crypto'
 import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/domain/contracts/repo'
 import { mock, MockProxy } from 'jest-mock-extended'
 
@@ -9,7 +9,7 @@ type Params = {
   password: string
 }
 describe('AddAccountUseCase', () => {
-  let encrypter: MockProxy<Encrypter>
+  let hasher: MockProxy<Hasher>
   let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
   let uuid: MockProxy<UUID>
   let sut: AddAccount
@@ -17,8 +17,8 @@ describe('AddAccountUseCase', () => {
 
   beforeAll(() => {
     accountData = { email: 'any@mail.com', name: 'any name', password: 'any_password' }
-    encrypter = mock()
-    encrypter.encrypt.mockResolvedValue('hashedPassword')
+    hasher = mock()
+    hasher.hash.mockResolvedValue('hashedPassword')
     userAccountRepo = mock()
     userAccountRepo.load.mockResolvedValue(false)
     uuid = mock()
@@ -26,19 +26,19 @@ describe('AddAccountUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = setupAddAccount(encrypter, userAccountRepo, uuid)
+    sut = setupAddAccount(hasher, userAccountRepo, uuid)
   })
 
-  it('should call Encrypter with correct params', async () => {
+  it('should call Hasher with correct params', async () => {
     await sut(accountData)
-    expect(encrypter.encrypt).toHaveBeenCalledWith({ plainText: 'any_password' })
-    expect(encrypter.encrypt).toHaveBeenCalledTimes(1)
+    expect(hasher.hash).toHaveBeenCalledWith({ plainText: 'any_password' })
+    expect(hasher.hash).toHaveBeenCalledTimes(1)
   })
 
-  it('should throws if AddAccountError if Encrypter throws', async () => {
-    encrypter.encrypt.mockRejectedValueOnce(new Error('Encrypter error'))
+  it('should throws if AddAccountError if Hasher throws', async () => {
+    hasher.hash.mockRejectedValueOnce(new Error('Hasher error'))
     const promise = sut(accountData)
-    await expect(promise).rejects.toThrow(new Error('Encrypter error'))
+    await expect(promise).rejects.toThrow(new Error('Hasher error'))
   })
 
   it('should throws if CreateUserAccount throws', async () => {
