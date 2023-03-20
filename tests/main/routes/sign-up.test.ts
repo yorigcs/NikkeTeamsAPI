@@ -20,7 +20,7 @@ describe('Sign-up Routes', () => {
       const { status, body } = await request(app).post('/api/sign-up').send(httpRequestData)
 
       expect(status).toBe(201)
-      expect(body).toBe('Account created successfully')
+      expect(body).toEqual({ acessToken: expect.any(String), refreshToken: expect.any(String), user: { name: 'any_name', email: 'any_mail@mail.com', role: 'user', picture: expect.any(String) } })
     })
 
     it('should response with status 409 and body error  with message "This account already exists"', async () => {
