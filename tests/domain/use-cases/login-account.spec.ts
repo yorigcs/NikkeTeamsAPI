@@ -44,7 +44,7 @@ describe('LoginAccountUseCase', () => {
 
   beforeAll(() => {
     userAccountRepo = mock()
-    userAccountRepo.load.mockResolvedValue({ name: 'any_name', email: 'any_email', password: 'hashed_password', picture: 'any_picture', roles: 'user', id: 'any_id' })
+    userAccountRepo.load.mockResolvedValue({ name: 'any_name', email: 'any@mail', password: 'hashed_password', picture: 'any_picture', roles: 'user', id: 'any_id' })
     hashCompare = mock()
     hashCompare.compare.mockResolvedValue(true)
     tokenGenerator = mock()
@@ -90,5 +90,19 @@ describe('LoginAccountUseCase', () => {
     expect(tokenGenerator.generate).toHaveBeenCalledTimes(2)
     expect(tokenGenerator.generate).toHaveBeenCalledWith({ key: 'any_id', expirationInMs: 1 * 60 * 60 * 1000 })
     expect(tokenGenerator.generate).toHaveBeenCalledWith({ key: 'any_id', expirationInMs: 24 * 60 * 60 * 1000 })
+  })
+
+  it('should returns user with acessToken and refreshToken', async () => {
+    const resp = await sut({ email: 'any@mail', password: 'any_password' })
+    expect(resp).toEqual({
+      user: {
+        name: 'any_name',
+        email: 'any@mail',
+        picture: 'any_picture',
+        role: 'user'
+      },
+      acessToken: 'any_token',
+      refreshToken: 'any_token'
+    })
   })
 })
