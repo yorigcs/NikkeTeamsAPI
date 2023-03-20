@@ -1,5 +1,5 @@
 export interface Hasher {
-  hash: (params: Hasher.Input) => Promise<Hasher.Output>
+  hash: (input: Hasher.Input) => Promise<Hasher.Output>
 }
 
 export namespace Hasher {
@@ -10,7 +10,7 @@ export namespace Hasher {
 }
 
 export interface HasherCompare {
-  compare: (params: HasherCompare.Input) => Promise<HasherCompare.Output>
+  compare: (input: HasherCompare.Input) => Promise<HasherCompare.Output>
 }
 
 export namespace HasherCompare {

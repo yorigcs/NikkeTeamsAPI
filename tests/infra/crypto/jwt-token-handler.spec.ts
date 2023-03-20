@@ -28,7 +28,7 @@ describe('', () => {
     sut = new JwtTokenHandler(secret)
   })
 
-  it('should calls sign with correct params', async () => {
+  it('should calls sign with correct input', async () => {
     await sut.generate({ key, expirationInMs })
 
     expect(sign).toHaveBeenCalledTimes(1)

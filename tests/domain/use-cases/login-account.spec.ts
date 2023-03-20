@@ -38,7 +38,7 @@ describe('LoginAccountUseCase', () => {
     expect(resp).toBe(null)
   })
 
-  it('should calls hasher compare with correct params', async () => {
+  it('should calls hasher compare with correct input', async () => {
     await sut({ email: 'any@mail', password: 'any_password' })
 
     expect(hashCompare.compare).toHaveBeenCalledTimes(1)

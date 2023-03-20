@@ -3,7 +3,7 @@ import { Hasher, UUID } from '@/domain/contracts/crypto'
 import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/domain/contracts/repo'
 import { mock, MockProxy } from 'jest-mock-extended'
 
-type Params = {
+type Input = {
   name: string
   email: string
   password: string
@@ -13,7 +13,7 @@ describe('AddAccountUseCase', () => {
   let userAccountRepo: MockProxy<SaveAccountRepository & LoadAccountByEmailRepository>
   let uuid: MockProxy<UUID>
   let sut: AddAccount
-  let accountData: Params
+  let accountData: Input
 
   beforeAll(() => {
     accountData = { email: 'any@mail.com', name: 'any name', password: 'any_password' }
@@ -29,7 +29,7 @@ describe('AddAccountUseCase', () => {
     sut = setupAddAccount(hasher, userAccountRepo, uuid)
   })
 
-  it('should call Hasher with correct params', async () => {
+  it('should call Hasher with correct input', async () => {
     await sut(accountData)
     expect(hasher.hash).toHaveBeenCalledWith({ plainText: 'any_password' })
     expect(hasher.hash).toHaveBeenCalledTimes(1)
@@ -47,13 +47,13 @@ describe('AddAccountUseCase', () => {
     await expect(promise).rejects.toThrow(new Error('CreateUserAccount error'))
   })
 
-  it('should call saveAccountRepo with correct params', async () => {
+  it('should call saveAccountRepo with correct input', async () => {
     await sut(accountData)
     expect(userAccountRepo.save).toHaveBeenCalledWith({ id: 'any_id', ...accountData, password: 'hashedPassword', picture: 'AN' })
     expect(userAccountRepo.save).toHaveBeenCalledTimes(1)
   })
 
-  it('should call loadAccountByEmailRepo with correct params', async () => {
+  it('should call loadAccountByEmailRepo with correct input', async () => {
     await sut(accountData)
     expect(userAccountRepo.load).toHaveBeenCalledWith({ email: accountData.email })
     expect(userAccountRepo.load).toHaveBeenCalledTimes(1)
@@ -65,7 +65,7 @@ describe('AddAccountUseCase', () => {
     expect(userAccountRepo.save).toHaveBeenCalledTimes(0)
   })
 
-  it('should call Uuid with correct params', async () => {
+  it('should call Uuid with correct input', async () => {
     await sut(accountData)
     expect(uuid.generate).toHaveBeenCalledWith({})
     expect(uuid.generate).toHaveBeenCalledTimes(1)

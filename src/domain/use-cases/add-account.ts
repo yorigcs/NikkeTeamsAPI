@@ -4,11 +4,13 @@ import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/domain/co
 import { UserProfile } from '../entities'
 
 type Setup = (hasher: Hasher, userAccountRepo: SaveAccountRepository & LoadAccountByEmailRepository, uuid: UUID) => AddAccount
-export type AddAccount = (params: { name: string, email: string, password: string }) => Promise<boolean>
+type Input = { name: string, email: string, password: string }
+type Output = boolean
+export type AddAccount = (input: Input) => Promise<Output>
 
-export const setupAddAccount: Setup = (hasher, userAccountRepo, uuid) => async params => {
+export const setupAddAccount: Setup = (hasher, userAccountRepo, uuid) => async input => {
   let hasSucess = false
-  const { name, email, password } = params
+  const { name, email, password } = input
   const hasAccount = await userAccountRepo.load({ email })
   if (hasAccount === null) {
     const { initials } = new UserProfile(name)
