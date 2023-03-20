@@ -28,9 +28,14 @@ describe('', () => {
     sut = new JwtTokenHandler(secret)
   })
 
-  it('should calls', async () => {
+  it('should calls sign with correct params', async () => {
     await sut.generate({ key, expirationInMs })
     expect(sign).toHaveBeenCalledTimes(1)
     expect(sign).toHaveBeenCalledWith({ key }, secret, { expiresIn: 1 })
+  })
+
+  it('should returns a token', async () => {
+    const resp = await sut.generate({ key, expirationInMs })
+    expect(resp).toBe('any_token')
   })
 })
