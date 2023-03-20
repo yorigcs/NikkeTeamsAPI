@@ -26,4 +26,8 @@ describe('LoginAccountUseCase', () => {
     expect(userAccountRepo.load).toHaveBeenLastCalledWith({ email: 'any@mail' })
     expect(userAccountRepo.load).toHaveBeenCalledTimes(1)
   })
+  it('should returns null if user is null', async () => {
+    const resp = await sut({ email: 'any@mail', password: 'any_password' })
+    expect(resp).toBe(null)
+  })
 })
