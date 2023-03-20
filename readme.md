@@ -51,6 +51,7 @@ Don't forget to config .env and .env.test the same as the .env.example
 - [module-alias](https://www.npmjs.com/package/module-alias): Create aliases of directories and register custom module paths in NodeJS
 - [reflect-metadata](https://www.npmjs.com/package/reflect-metadata): Metadata Reflection API
 - [uuid](https://www.npmjs.com/package/uuid): For the creation of RFC4122 UUIDs
+- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken): An implementation of JSON Web Tokens.
 
 
 ## Dev Dependencies
@@ -73,6 +74,7 @@ Don't forget to config .env and .env.test the same as the .env.example
 - [@types/supertest](https://www.npmjs.com/package/@types/supertest): TypeScript definitions for supertest
 - [@types/uuid](https://www.npmjs.com/package/@types/uuid): TypeScript definitions for uuid
 - [@types/module-alias](https://www.npmjs.com/package/@types/module-alias): TypeScript definitions for module-alias
+- [@types/jsonwebtoken](https://www.npmjs.com/package/@types/jsonwebtoken): An implementation of JSON Web Tokens.
 
 
 ## License
