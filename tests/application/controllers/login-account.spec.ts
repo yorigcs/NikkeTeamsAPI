@@ -1,6 +1,7 @@
 import { Controller } from '@/application/controllers'
 import { LoginAccount } from '@/domain/use-cases'
-import { HttpResponse, ok } from '@/application/helpers'
+import { HttpResponse, ok, unauthorized } from '@/application/helpers'
+import { UnauthorizedError } from '@/application/errors'
 
 type HttpRequest = { email: string, password: string }
 class LoginAccountController extends Controller {
@@ -9,8 +10,9 @@ class LoginAccountController extends Controller {
   }
 
   async perform ({ email, password }: HttpRequest): Promise<HttpResponse<any>> {
-    await this.loginAccount({ email, password })
-    return ok('any_data')
+    const user = await this.loginAccount({ email, password })
+    if (user === null) return unauthorized('The email or password is wrong')
+    return ok(user)
   }
 }
 
@@ -37,5 +39,16 @@ describe('LoginAccountController', () => {
     await sut.perform({ email: 'any@mail', password: 'any_password' })
     expect(loginAccount).toHaveBeenCalledTimes(1)
     expect(loginAccount).toHaveBeenCalledWith({ email: 'any@mail', password: 'any_password' })
+  })
+
+  it('should returns status code 401 and body with error message if password or email is wrong', async () => {
+    loginAccount.mockReturnValueOnce(null)
+    const httpResponse = await sut.handle({ email: 'any@mail', password: 'any_password' })
+    expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError('The email or password is wrong') })
+  })
+
+  it('should returns status code 200 and body with data', async () => {
+    const httpResponse = await sut.handle({ email: 'any@mail', password: 'any_password' })
+    expect(httpResponse).toEqual({ statusCode: 200, data })
   })
 })
