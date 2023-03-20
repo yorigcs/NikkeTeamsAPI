@@ -1,4 +1,4 @@
-import { ConflictError, ServerError } from '@/application/errors'
+import { ConflictError, ServerError, UnauthorizedError } from '@/application/errors'
 
 export type HttpResponse<T = any> = {
   statusCode: number
@@ -8,6 +8,11 @@ export type HttpResponse<T = any> = {
 export const badRequest = (error: Error): HttpResponse<Error> => ({
   statusCode: 400,
   data: error
+})
+
+export const unauthorized = (msg: string): HttpResponse<Error> => ({
+  statusCode: 401,
+  data: new UnauthorizedError(msg)
 })
 
 export const conflict = (msg: string): HttpResponse<Error> => ({

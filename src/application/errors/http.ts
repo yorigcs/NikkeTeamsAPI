@@ -26,3 +26,10 @@ export class ConflictError extends Error {
     this.name = 'ConflictError'
   }
 }
+
+export class UnauthorizedError extends Error {
+  constructor (private readonly msg: string) {
+    super(msg)
+    this.message = 'UnauthorizedError'
+  }
+}
