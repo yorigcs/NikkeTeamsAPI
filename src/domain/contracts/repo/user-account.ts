@@ -24,6 +24,7 @@ export namespace LoadAccountByEmailRepository {
     name: string
     email: string
     password: string
+    picture: string
     roles: 'admin' | 'user'
   } | null
 }
