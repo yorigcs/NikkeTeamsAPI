@@ -18,15 +18,15 @@ describe('UserAccountRepository', () => {
     sut = new UserAccountRepository()
   })
 
-  it('should returns false if user doesnt have an account', async () => {
+  it('should returns null if user doesnt have an account', async () => {
     const hasAccount = await sut.load({ email })
-    expect(hasAccount).toBe(false)
+    expect(hasAccount).toBe(null)
   })
 
-  it('should returns true user have an account', async () => {
+  it('should returns user have an account', async () => {
     prismaMock.users.findUnique.mockResolvedValueOnce(user)
     const hasAccount = await sut.load({ email })
-    expect(hasAccount).toBe(true)
+    expect(hasAccount).toEqual(user)
   })
 
   it('should throw an error if load throws', async () => {

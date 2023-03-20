@@ -10,7 +10,7 @@ export const setupAddAccount: Setup = (hasher, userAccountRepo, uuid) => async p
   let hasSucess = false
   const { name, email, password } = params
   const hasAccount = await userAccountRepo.load({ email })
-  if (!hasAccount) {
+  if (hasAccount === null) {
     const { initials } = new UserProfile(name)
     const hashpassword = await hasher.hash({ plainText: password })
     const uuidG = await uuid.generate({})

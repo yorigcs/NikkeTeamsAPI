@@ -20,7 +20,7 @@ describe('AddAccountUseCase', () => {
     hasher = mock()
     hasher.hash.mockResolvedValue('hashedPassword')
     userAccountRepo = mock()
-    userAccountRepo.load.mockResolvedValue(false)
+    userAccountRepo.load.mockResolvedValue(null)
     uuid = mock()
     uuid.generate.mockResolvedValue('any_id')
   })
@@ -60,7 +60,7 @@ describe('AddAccountUseCase', () => {
   })
 
   it('should not call saveAccountRepo if loadAccountByEmailRepo is true', async () => {
-    userAccountRepo.load.mockResolvedValueOnce(true)
+    userAccountRepo.load.mockResolvedValueOnce({ ...accountData, id: 'any_id', roles: 'user' })
     await sut(accountData)
     expect(userAccountRepo.save).toHaveBeenCalledTimes(0)
   })
