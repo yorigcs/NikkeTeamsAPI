@@ -4,8 +4,7 @@ import { AcessToken, RefreshToken } from '@/domain/entities'
 
 type Input = { email: string, password: string }
 type UserPartial = { name: string, email: string, picture: string, role: string }
-type Output = { user: UserPartial, acessToken: string, refreshToken: string } | null
-
+export type Output = { user: UserPartial, acessToken: string, refreshToken: string } | null
 export type LoginAccount = (input: Input) => Promise<Output>
 type Setup = (userAccountRepo: LoadAccountByEmailRepository, hashCompare: HasherCompare, tokenGenerator: TokenGenerator) => LoginAccount
 
@@ -15,11 +14,11 @@ export const setupLoginAccount: Setup = (userAccountRepo, hashCompare, tokenGene
   if (user === null) return null
   const isPasswordValid = await hashCompare.compare({ plainText: password, digest: user.password })
   if (!isPasswordValid) return null
-  const acessToken = await tokenGenerator.generate({ key: user.id, expirationInMs: AcessToken.expirationInMs })
-  const refreshToken = await tokenGenerator.generate({ key: user.id, expirationInMs: RefreshToken.expirationInMs })
-
+  const { id, name, picture, roles } = user
+  const acessToken = await tokenGenerator.generate({ key: id, expirationInMs: AcessToken.expirationInMs })
+  const refreshToken = await tokenGenerator.generate({ key: id, expirationInMs: RefreshToken.expirationInMs })
   return {
-    user: { name: user.name, email: user.email, picture: user.picture, role: user.roles },
+    user: { name, email, picture, role: roles },
     acessToken,
     refreshToken
   }
