@@ -8,3 +8,16 @@ export namespace Hasher {
   }
   export type Output = string
 }
+
+export interface HasherCompare {
+  compare: (params: HasherCompare.Input) => Promise<HasherCompare.Output>
+}
+
+export namespace HasherCompare {
+  export type Input = {
+    plainText: string
+    digest: string
+  }
+
+  export type Output = boolean
+}
