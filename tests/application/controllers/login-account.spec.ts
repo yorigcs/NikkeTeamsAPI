@@ -26,8 +26,8 @@ describe('LoginAccountController', () => {
   it('should build valitors correctly', async () => {
     const validators = sut.buildValidators(httpRequest)
     expect(validators).toEqual([
-      new EmailValidator('any@email.com'),
       new RequiredStringValidator('email', 'any@email.com'),
+      new EmailValidator('any@email.com'),
       new RequiredStringValidator('password', 'any_password')
     ])
   })
