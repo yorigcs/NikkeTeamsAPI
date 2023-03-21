@@ -1,4 +1,4 @@
-import { TokenGenerator } from '@/domain/contracts/crypto'
+import { type TokenGenerator } from '@/domain/contracts/crypto'
 import { sign } from 'jsonwebtoken'
 
 export class JwtTokenHandler implements TokenGenerator {

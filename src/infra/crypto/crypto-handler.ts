@@ -1,4 +1,4 @@
-import { Hasher, HasherCompare } from '@/domain/contracts/crypto'
+import { type Hasher, type HasherCompare } from '@/domain/contracts/crypto'
 import bcrypt from 'bcrypt'
 
 export class HashHandler implements Hasher, HasherCompare {

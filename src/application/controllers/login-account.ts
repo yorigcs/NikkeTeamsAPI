@@ -1,7 +1,7 @@
 import { Controller } from '@/application/controllers'
-import { LoginAccount, Output as Response } from '@/domain/use-cases'
-import { HttpResponse, ok, unauthorized } from '@/application/helpers'
-import { Validator, ValidationBuild as Builder } from '@/application/validations'
+import { type LoginAccount, type Output as Response } from '@/domain/use-cases'
+import { type HttpResponse, ok, unauthorized } from '@/application/helpers'
+import { type Validator, ValidationBuild as Builder } from '@/application/validations'
 
 type HttpRequest = { email: string, password: string }
 type Model = Error | Response

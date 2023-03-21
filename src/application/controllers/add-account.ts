@@ -1,7 +1,7 @@
-import { conflict, created, HttpResponse } from '@/application/helpers'
-import { ValidationBuild as Builder, Validator } from '@/application/validations'
+import { conflict, created, type HttpResponse } from '@/application/helpers'
+import { ValidationBuild as Builder, type Validator } from '@/application/validations'
 import { Controller } from '@/application/controllers'
-import { AddAccount } from '@/domain/use-cases'
+import { type AddAccount } from '@/domain/use-cases'
 
 type HttpRequest = { name: string, email: string, password: string, confirmPassword: string }
 type Model = Error | { message: string }

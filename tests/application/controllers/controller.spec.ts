@@ -1,6 +1,5 @@
-
 import { Controller } from '@/application/controllers'
-import { HttpResponse } from '@/application/helpers'
+import { type HttpResponse } from '@/application/helpers'
 import { ServerError } from '@/application/errors'
 import { ValidationComposite } from '@/application/validations'
 

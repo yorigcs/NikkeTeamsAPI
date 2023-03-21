@@ -1,4 +1,4 @@
-import { Validator } from '@/application/validations'
+import { type Validator } from '@/application/validations'
 import { EmailError } from '@/application/errors'
 
 export class EmailValidator implements Validator {

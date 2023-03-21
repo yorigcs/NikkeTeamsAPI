@@ -1,7 +1,7 @@
 import { UserAccountRepository } from '@/infra/repo'
 
 import { prismaMock } from '@/tests/infra/repo/mocks'
-import { Users } from '@prisma/client'
+import { type Users } from '@prisma/client'
 
 describe('UserAccountRepository', () => {
   let user: Users

@@ -1,7 +1,7 @@
-import { mock, MockProxy } from 'jest-mock-extended'
-import { LoadAccountByEmailRepository } from '@/domain/contracts/repo'
-import { HasherCompare, TokenGenerator } from '@/domain/contracts/crypto'
-import { LoginAccount, setupLoginAccount } from '@/domain/use-cases'
+import { mock, type MockProxy } from 'jest-mock-extended'
+import { type LoadAccountByEmailRepository } from '@/domain/contracts/repo'
+import { type HasherCompare, type TokenGenerator } from '@/domain/contracts/crypto'
+import { type LoginAccount, setupLoginAccount } from '@/domain/use-cases'
 import { AcessToken, RefreshToken } from '@/domain/entities'
 
 describe('LoginAccountUseCase', () => {

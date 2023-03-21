@@ -1,6 +1,6 @@
-import { Controller } from '@/application/controllers'
+import { type Controller } from '@/application/controllers'
 import { AcessToken, RefreshToken } from '@/domain/entities'
-import { RequestHandler } from 'express'
+import { type RequestHandler } from 'express'
 
 type Adapter = (controller: Controller) => RequestHandler
 

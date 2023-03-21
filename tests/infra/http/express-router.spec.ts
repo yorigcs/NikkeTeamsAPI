@@ -1,9 +1,11 @@
-import { Controller } from '@/application/controllers'
-import { adapterExpressController } from '@/infra/http'
-
-import { NextFunction, Request, RequestHandler, Response } from 'express'
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/await-thenable */
+import { type NextFunction, type Request, type RequestHandler, type Response } from 'express'
 import { getMockReq, getMockRes } from '@jest-mock/express'
-import { mock, MockProxy } from 'jest-mock-extended'
+import { mock, type MockProxy } from 'jest-mock-extended'
+
+import { type Controller } from '@/application/controllers'
+import { adapterExpressController } from '@/infra/http'
 import { AcessToken, RefreshToken } from '@/domain/entities'
 
 describe('ExpressRouter', () => {

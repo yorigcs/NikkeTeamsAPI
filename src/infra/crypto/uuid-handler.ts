@@ -1,4 +1,4 @@
-import { UUID } from '@/domain/contracts/crypto'
+import { type UUID } from '@/domain/contracts/crypto'
 import { v4 } from 'uuid'
 
 export class UUIDHandler implements UUID {

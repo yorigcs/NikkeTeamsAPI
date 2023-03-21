@@ -1,7 +1,7 @@
-import { AddAccount, setupAddAccount } from '@/domain/use-cases'
-import { Hasher, UUID } from '@/domain/contracts/crypto'
-import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/domain/contracts/repo'
-import { mock, MockProxy } from 'jest-mock-extended'
+import { type AddAccount, setupAddAccount } from '@/domain/use-cases'
+import { type Hasher, type UUID } from '@/domain/contracts/crypto'
+import { type SaveAccountRepository, type LoadAccountByEmailRepository } from '@/domain/contracts/repo'
+import { mock, type MockProxy } from 'jest-mock-extended'
 
 type Input = {
   name: string

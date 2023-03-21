@@ -1,4 +1,4 @@
-import { LoginAccount, setupLoginAccount } from '@/domain/use-cases'
+import { type LoginAccount, setupLoginAccount } from '@/domain/use-cases'
 import { makeUserAccountRepository } from '@/main/factories/infra/repo'
 import { makeHashHandler, makeJwtTokenHandler } from '../infra/crypto'
 

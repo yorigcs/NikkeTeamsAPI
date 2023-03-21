@@ -1,5 +1,5 @@
-import { LoadAccountByEmailRepository } from '@/domain/contracts/repo'
-import { HasherCompare, TokenGenerator } from '@/domain/contracts/crypto'
+import { type LoadAccountByEmailRepository } from '@/domain/contracts/repo'
+import { type HasherCompare, type TokenGenerator } from '@/domain/contracts/crypto'
 import { AcessToken, RefreshToken } from '@/domain/entities'
 
 type Input = { email: string, password: string }

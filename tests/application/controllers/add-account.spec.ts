@@ -1,4 +1,3 @@
-
 import { AddAccountController, Controller } from '@/application/controllers'
 import { ConflictError } from '@/application/errors'
 import { RequiredStringValidator, CompareStringValidator, EmailValidator } from '@/application/validations'

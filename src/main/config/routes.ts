@@ -1,4 +1,4 @@
-import { Router, Express } from 'express'
+import { Router, type Express } from 'express'
 import { readdirSync } from 'fs'
 import { join } from 'path'
 export const setupRoutes = (app: Express): void => {

@@ -1,6 +1,6 @@
-import { Hasher, UUID } from '@/domain/contracts/crypto'
+import { type Hasher, type UUID } from '@/domain/contracts/crypto'
 
-import { SaveAccountRepository, LoadAccountByEmailRepository } from '@/domain/contracts/repo/user-account'
+import { type SaveAccountRepository, type LoadAccountByEmailRepository } from '@/domain/contracts/repo/user-account'
 import { UserProfile } from '../entities'
 
 type Setup = (hasher: Hasher, userAccountRepo: SaveAccountRepository & LoadAccountByEmailRepository, uuid: UUID) => AddAccount

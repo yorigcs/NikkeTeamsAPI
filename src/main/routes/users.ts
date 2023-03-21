@@ -1,5 +1,5 @@
 import { adapterExpressController as adapt } from '@/infra/http'
-import { Router } from 'express'
+import { type Router } from 'express'
 import { makeAddAccountController, makeLoginAccountController } from '../factories/controllers'
 
 export default (router: Router): void => {

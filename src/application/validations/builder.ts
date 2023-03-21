@@ -1,4 +1,4 @@
-import { CompareStringValidator, EmailValidator, RequiredStringValidator, Validator } from '@/application/validations'
+import { CompareStringValidator, EmailValidator, RequiredStringValidator, type Validator } from '@/application/validations'
 
 export class ValidationBuild {
   private constructor (
