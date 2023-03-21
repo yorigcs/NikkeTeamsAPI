@@ -16,16 +16,11 @@ describe('Sign-up Routes', () => {
     beforeAll(() => { httpRequestData = { name: 'any_name', email: 'any_mail@mail.com', password: 'any_pass', confirmPassword: 'any_pass' } })
     beforeEach(async () => { await prismaConnection.users.deleteMany() })
 
-    it('should response with status 201 and body with message "Account created successfully"', async () => {
-      const { status, body, header } = await request(app).post('/api/sign-up').send(httpRequestData)
-
-      const [acessToken, refreshToken] = header['set-cookie']
-
-      expect(acessToken).toBeDefined()
-      expect(refreshToken).toBeDefined()
+    it('should response with status 201 and body with message "Account created!"', async () => {
+      const { status, body } = await request(app).post('/api/sign-up').send(httpRequestData)
 
       expect(status).toBe(201)
-      expect(body).toEqual({ user: { name: 'any_name', email: 'any_mail@mail.com', role: 'user', picture: expect.any(String) } })
+      expect(body).toEqual({ message: 'Account created!' })
     })
 
     it('should response with status 409 and body error  with message "This account already exists"', async () => {
