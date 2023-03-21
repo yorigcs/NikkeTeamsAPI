@@ -4,6 +4,7 @@ import { adapterExpressController } from '@/infra/http'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { mock, MockProxy } from 'jest-mock-extended'
+import { AcessToken, RefreshToken } from '@/domain/entities'
 
 describe('ExpressRouter', () => {
   let req: Request
@@ -49,6 +50,25 @@ describe('ExpressRouter', () => {
     expect(res.status).toHaveBeenCalledTimes(1)
 
     expect(res.json).toHaveBeenCalledWith({ error: 'any_error' })
+    expect(res.json).toHaveBeenCalledTimes(1)
+  })
+
+  it('should set cookies if refreshToken and acessToken are defined', async () => {
+    controller.handle.mockResolvedValueOnce({
+      statusCode: 200,
+      data: { refreshToken: 'any_token', acessToken: 'any_token', other_data: 'any_data' }
+    })
+
+    await sut(req, res, next)
+
+    expect(res.cookie).toBeCalledTimes(2)
+    expect(res.cookie).toHaveBeenCalledWith('refreshToken', 'any_token', { expires: expect.any(Date), maxAge: RefreshToken.expirationInMs, httpOnly: true, sameSite: 'lax' })
+    expect(res.cookie).toHaveBeenCalledWith('acessToken', 'any_token', { expires: expect.any(Date), maxAge: AcessToken.expirationInMs, httpOnly: true, sameSite: 'lax' })
+
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.status).toHaveBeenCalledTimes(1)
+
+    expect(res.json).toHaveBeenCalledWith({ other_data: 'any_data' })
     expect(res.json).toHaveBeenCalledTimes(1)
   })
 })
