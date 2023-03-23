@@ -34,11 +34,11 @@
     "cors": "^2.8.5",
     "dotenv-cli": "^7.0.0",
     "express": "^4.18.2",
-    "jest-mock-extended": "^3.0.3",
+    "jest-mock-extended": "^3.0.4",
     "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.2",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^4.4.0",
+    "rimraf": "^4.4.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
