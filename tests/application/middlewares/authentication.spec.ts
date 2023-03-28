@@ -1,29 +1,5 @@
-import { ok, unauthorized, type HttpResponse } from '@/application/helpers'
 import { UnauthorizedError } from '@/application/errors'
-import { RequiredStringValidator } from '@/application/validations'
-
-type Model = Error | { userId: string }
-type HttpRequest = { acessToken: string }
-
-type Authorization = (input: { token: string }) => Promise<string>
-class AuthenticationMiddleware {
-  constructor (private readonly auth: Authorization) {}
-
-  async handle ({ acessToken }: HttpRequest): Promise<HttpResponse<Model>> {
-    if (!this.validate({ acessToken })) return unauthorized('acessToken is required')
-    try {
-      const userId = await this.auth({ token: acessToken })
-      return ok({ userId })
-    } catch {
-      return unauthorized('Invalid token')
-    }
-  }
-
-  private validate ({ acessToken }: HttpRequest): boolean {
-    const error = new RequiredStringValidator('acessToken', acessToken).validate()
-    return error === undefined
-  }
-}
+import { AuthenticationMiddleware } from '@/application/middlewares'
 
 describe('AuthenticationMiddleware', () => {
   let sut: AuthenticationMiddleware
