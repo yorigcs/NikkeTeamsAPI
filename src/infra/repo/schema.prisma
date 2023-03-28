@@ -8,15 +8,28 @@ datasource db {
 }
 
 model Users {
-  id       String @unique
+  id       String     @unique
   name     String
-  email    String @unique
+  email    String     @unique
   password String
   picture  String
-  roles    Roles  @default(user)
+  roles    Roles      @default(user)
+  Campaing Campaign[]
 }
 
 enum Roles {
   admin
   user
+}
+
+model Campaign {
+  id         String   @unique
+  stage      String
+  power      String
+  image      String   @unique
+  nikkes     String[]
+  uploaderId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  users      Users    @relation(fields: [uploaderId], references: [id])
 }
