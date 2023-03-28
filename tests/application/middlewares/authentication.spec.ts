@@ -1,4 +1,5 @@
 import { ok, unauthorized, type HttpResponse } from '@/application/helpers'
+import { UnauthorizedError } from '@/application/errors'
 
 type Model = Error | { userId: string }
 type HttpRequest = { acessToken: string }
@@ -39,5 +40,11 @@ describe('AuthenticationMiddleware', () => {
   it('should returns status code 200 and userId', async () => {
     const httpResponse = await sut.handle({ acessToken })
     expect(httpResponse).toEqual({ statusCode: 200, data: { userId: 'any_user_id' } })
+  })
+
+  it('should returns status code 401 if invalid token', async () => {
+    authorization.mockRejectedValueOnce(new Error('Invalid token'))
+    const httpResponse = await sut.handle({ acessToken })
+    expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError('Invalid token') })
   })
 })
