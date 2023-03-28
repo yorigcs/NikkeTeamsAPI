@@ -1,11 +1,19 @@
+import { ok, unauthorized, type HttpResponse } from '@/application/helpers'
 
+type Model = Error | { userId: string }
 type HttpRequest = { acessToken: string }
-type Authorization = (input: { token: string }) => Promise<{ userId: string }>
+
+type Authorization = (input: { token: string }) => Promise<string>
 class AuthenticationMiddleware {
   constructor (private readonly auth: Authorization) {}
 
-  async handle ({ acessToken }: HttpRequest): Promise<void> {
-    await this.auth({ token: acessToken })
+  async handle ({ acessToken }: HttpRequest): Promise<HttpResponse<Model>> {
+    try {
+      const userId = await this.auth({ token: acessToken })
+      return ok({ userId })
+    } catch {
+      return unauthorized('Invalid token')
+    }
   }
 }
 
@@ -16,7 +24,7 @@ describe('AuthenticationMiddleware', () => {
 
   beforeAll(() => {
     acessToken = 'any_token'
-    authorization = jest.fn().mockResolvedValue('any_token')
+    authorization = jest.fn().mockResolvedValue('any_user_id')
   })
   beforeEach(() => {
     sut = new AuthenticationMiddleware(authorization)
@@ -26,5 +34,10 @@ describe('AuthenticationMiddleware', () => {
     await sut.handle({ acessToken })
     expect(authorization).toHaveBeenCalledTimes(1)
     expect(authorization).toHaveBeenCalledWith({ token: acessToken })
+  })
+
+  it('should returns status code 200 and userId', async () => {
+    const httpResponse = await sut.handle({ acessToken })
+    expect(httpResponse).toEqual({ statusCode: 200, data: { userId: 'any_user_id' } })
   })
 })
