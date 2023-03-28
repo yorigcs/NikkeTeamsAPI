@@ -55,8 +55,13 @@ describe('AuthenticationMiddleware', () => {
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError('Invalid token') })
   })
 
-  it('should returns status code 401 if acessToken is  empty', async () => {
+  it('should returns status code 401 if acessToken is empty', async () => {
     const httpResponse = await sut.handle({ acessToken: '' })
+    expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError('acessToken is required') })
+  })
+
+  it('should returns status code 401 if acessToken is null', async () => {
+    const httpResponse = await sut.handle({ acessToken: null as any })
     expect(httpResponse).toEqual({ statusCode: 401, data: new UnauthorizedError('acessToken is required') })
   })
 })
