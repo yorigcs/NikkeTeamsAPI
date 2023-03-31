@@ -53,4 +53,12 @@ describe('AddCampaignGuideUseCase', () => {
     expect(fileStorage.upload).toHaveBeenCalledTimes(1)
     expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any_buffer'), fileName: 'any_uuid.png' })
   })
+
+  it('should throws if uuid generate throws', async () => {
+    uuid.generate.mockRejectedValueOnce(new Error('uuid_generate_error'))
+
+    const response = sut(input)
+
+    await expect(response).rejects.toThrow(new Error('uuid_generate_error'))
+  })
 })
