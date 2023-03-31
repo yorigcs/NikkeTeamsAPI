@@ -61,4 +61,12 @@ describe('AddCampaignGuideUseCase', () => {
 
     await expect(response).rejects.toThrow(new Error('uuid_generate_error'))
   })
+
+  it('should throws if fileStorage upload throws', async () => {
+    fileStorage.upload.mockRejectedValueOnce(new Error('upload_error'))
+
+    const response = sut(input)
+
+    await expect(response).rejects.toThrow(new Error('upload_error'))
+  })
 })
