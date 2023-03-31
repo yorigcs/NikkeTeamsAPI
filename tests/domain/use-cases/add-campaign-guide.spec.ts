@@ -95,4 +95,10 @@ describe('AddCampaignGuideUseCase', () => {
 
     await expect(response).rejects.toThrow(new Error('save_error'))
   })
+
+  it('should not throws if sucess', async () => {
+    const response = sut(input)
+
+    await expect(response).resolves.not.toThrow()
+  })
 })
