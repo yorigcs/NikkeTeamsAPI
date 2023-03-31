@@ -87,4 +87,12 @@ describe('AddCampaignGuideUseCase', () => {
       uploaderId: 'any_userId'
     })
   })
+
+  it('should throws if campaignGuideRepo save throws', async () => {
+    campaignGuideRepoGuide.save.mockRejectedValueOnce(new Error('save_error'))
+
+    const response = sut(input)
+
+    await expect(response).rejects.toThrow(new Error('save_error'))
+  })
 })
