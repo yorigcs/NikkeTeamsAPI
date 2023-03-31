@@ -39,9 +39,18 @@ describe('AddCampaignGuideUseCase', () => {
   beforeEach(() => {
     sut = setupAddCampaingGuide(fileStorage, uuid)
   })
+
   it('should call uuid generate with correct input', async () => {
     await sut(input)
+
     expect(uuid.generate).toHaveBeenCalledTimes(1)
     expect(uuid.generate).toHaveBeenCalledWith({ key: 'any_userId' })
+  })
+
+  it('should call fileStorage upload with correct input', async () => {
+    await sut(input)
+
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any_buffer'), fileName: 'any_uuid.png' })
   })
 })
