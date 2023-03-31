@@ -1,6 +1,7 @@
 import { type UploadFile } from '@/domain/contracts/storage'
 import { type UUID } from '@/domain/contracts/crypto'
 import { mock, type MockProxy } from 'jest-mock-extended'
+import { type SaveCampaignGuideRepository } from '@/domain/contracts/repo'
 
 type Input = {
   userId: string
@@ -9,14 +10,14 @@ type Input = {
   power: string
   stage: string
 }
-type Output = string
-type AddCampaignGuide = (input: Input) => Promise<Output>
-type Setup = (fileStorage: UploadFile, uuid: UUID) => AddCampaignGuide
+type AddCampaignGuide = (input: Input) => Promise<void>
+type Setup = (fileStorage: UploadFile, uuid: UUID, campaignGuideRepoGuide: SaveCampaignGuideRepository) => AddCampaignGuide
 
-const setupAddCampaingGuide: Setup = (fileStorage, uuid) => async input => {
-  const { userId, file:{ buffer, mimeType } } = input
+const setupAddCampaingGuide: Setup = (fileStorage, uuid, campaignGuideRepoGuide) => async input => {
+  const { userId, file:{ buffer, mimeType }, nikkes, power, stage } = input
   const key = await uuid.generate({ key: userId })
-  return await fileStorage.upload({ file: buffer, fileName: `${key}.${mimeType.split('/')[1]}` })
+  const linkImage = await fileStorage.upload({ file: buffer, fileName: `${key}.${mimeType.split('/')[1]}` })
+  await campaignGuideRepoGuide.save({ id: key, image: linkImage, nikkes, power, stage, uploaderId: userId })
 }
 describe('AddCampaignGuideUseCase', () => {
   const input = {
@@ -28,16 +29,19 @@ describe('AddCampaignGuideUseCase', () => {
   }
   let uuid: MockProxy<UUID>
   let fileStorage: MockProxy<UploadFile>
+  let campaignGuideRepoGuide: MockProxy<SaveCampaignGuideRepository>
   let sut: AddCampaignGuide
   beforeAll(() => {
     uuid = mock()
     uuid.generate.mockResolvedValue('any_uuid')
     fileStorage = mock()
-    fileStorage.upload.mockResolvedValue('any_string')
+    fileStorage.upload.mockResolvedValue('any_image_link')
+    campaignGuideRepoGuide = mock()
+    campaignGuideRepoGuide.save.mockResolvedValue()
   })
 
   beforeEach(() => {
-    sut = setupAddCampaingGuide(fileStorage, uuid)
+    sut = setupAddCampaingGuide(fileStorage, uuid, campaignGuideRepoGuide)
   })
 
   it('should call uuid generate with correct input', async () => {
@@ -45,13 +49,6 @@ describe('AddCampaignGuideUseCase', () => {
 
     expect(uuid.generate).toHaveBeenCalledTimes(1)
     expect(uuid.generate).toHaveBeenCalledWith({ key: 'any_userId' })
-  })
-
-  it('should call fileStorage upload with correct input', async () => {
-    await sut(input)
-
-    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
-    expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any_buffer'), fileName: 'any_uuid.png' })
   })
 
   it('should throws if uuid generate throws', async () => {
@@ -62,11 +59,32 @@ describe('AddCampaignGuideUseCase', () => {
     await expect(response).rejects.toThrow(new Error('uuid_generate_error'))
   })
 
+  it('should call fileStorage upload with correct input', async () => {
+    await sut(input)
+
+    expect(fileStorage.upload).toHaveBeenCalledTimes(1)
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: Buffer.from('any_buffer'), fileName: 'any_uuid.png' })
+  })
+
   it('should throws if fileStorage upload throws', async () => {
     fileStorage.upload.mockRejectedValueOnce(new Error('upload_error'))
 
     const response = sut(input)
 
     await expect(response).rejects.toThrow(new Error('upload_error'))
+  })
+
+  it('should call campaignGuideRepoGuide save with correct input', async () => {
+    await sut(input)
+
+    expect(campaignGuideRepoGuide.save).toHaveBeenCalledTimes(1)
+    expect(campaignGuideRepoGuide.save).toHaveBeenCalledWith({
+      id: 'any_uuid',
+      image: 'any_image_link',
+      nikkes: ['any_nikke1', 'any_nikke2'],
+      power: '50000',
+      stage: '15-20',
+      uploaderId: 'any_userId'
+    })
   })
 })
