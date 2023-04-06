@@ -6,10 +6,11 @@ export class ServerError extends Error {
   }
 }
 
-export class RequiredFieldStringError extends Error {
-  constructor (private readonly field: string) {
-    super(`The field ${field} is required`)
-    this.name = 'RequiredFieldString'
+export class RequiredFieldError extends Error {
+  constructor (private readonly field?: string) {
+    const message = field === undefined ? 'Field Required' : `The field ${field} is required`
+    super(message)
+    this.name = 'RequiredFieldError'
   }
 }
 
