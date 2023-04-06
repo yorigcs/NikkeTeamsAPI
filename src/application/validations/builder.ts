@@ -1,4 +1,4 @@
-import { CompareStringValidator, EmailValidator, RequiredStringValidator, type Validator } from '@/application/validations'
+import { CompareStringValidator, EmailValidator, RequiredStringValidator, RequiredArrayValidator, type Validator } from '@/application/validations'
 
 export class ValidationBuild {
   private constructor (
@@ -7,12 +7,16 @@ export class ValidationBuild {
     private readonly validators: Validator[] = []
   ) {}
 
-  static of (input: { fieldName: string, value: string }): ValidationBuild {
-    return new ValidationBuild(input.fieldName, input.value)
+  static of ({ fieldName, value }: { fieldName: string, value: any }): ValidationBuild {
+    return new ValidationBuild(fieldName, value)
   }
 
   required (): ValidationBuild {
-    this.validators.push(new RequiredStringValidator(this.fieldName, this.value))
+    if (typeof this.value === 'string') {
+      this.validators.push(new RequiredStringValidator(this.fieldName, this.value))
+    } else if (Array.isArray(this.value)) {
+      this.validators.push(new RequiredArrayValidator(this.fieldName, this.value))
+    }
     return this
   }
 

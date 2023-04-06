@@ -22,3 +22,15 @@ export class RequiredStringValidator extends RequiredValidator {
     }
   }
 }
+
+export class RequiredArrayValidator extends RequiredValidator {
+  constructor (override readonly fieldName: string, override readonly value: string []) {
+    super(value, fieldName)
+  }
+
+  override validate (): Error | undefined {
+    if (super.validate() !== undefined || this.value.length === 0) {
+      return new RequiredFieldError(this.fieldName)
+    }
+  }
+}

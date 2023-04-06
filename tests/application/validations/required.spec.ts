@@ -1,4 +1,4 @@
-import { RequiredStringValidator, RequiredValidator } from '@/application/validations'
+import { RequiredStringValidator, RequiredValidator, RequiredArrayValidator } from '@/application/validations'
 import { RequiredFieldError } from '@/application/errors'
 
 describe('Required', () => {
@@ -39,8 +39,24 @@ describe('Required', () => {
     })
 
     it('should be instance of RequiredFieldError', () => {
-      const sut = new RequiredStringValidator('any_fieldname', 'any_value')
+      const sut = new RequiredStringValidator('any_fieldname', '')
+
+      const error = sut.validate()
+      expect(error).toEqual(new RequiredFieldError('any_fieldname'))
+    })
+  })
+
+  describe('RequiredArrayValidator', () => {
+    it('should be instance of RequiredFieldError', () => {
+      const sut = new RequiredArrayValidator('any_fieldname', ['any_value'])
       expect(sut).toBeInstanceOf(RequiredValidator)
+    })
+
+    it('should be instance of RequiredFieldError', () => {
+      const sut = new RequiredArrayValidator('any_fieldname', [])
+
+      const error = sut.validate()
+      expect(error).toEqual(new RequiredFieldError('any_fieldname'))
     })
   })
 })
