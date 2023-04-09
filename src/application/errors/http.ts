@@ -6,21 +6,6 @@ export class ServerError extends Error {
   }
 }
 
-export class RequiredFieldError extends Error {
-  constructor (private readonly field?: string) {
-    const message = field === undefined ? 'Field Required' : `The field ${field} is required`
-    super(message)
-    this.name = 'RequiredFieldError'
-  }
-}
-
-export class CompareFieldsError extends Error {
-  constructor (private readonly field: string, private readonly fieldToCompare: string) {
-    super(`The field ${field} must be equals to field ${fieldToCompare}`)
-    this.name = 'CompareFieldsError'
-  }
-}
-
 export class ConflictError extends Error {
   constructor (private readonly msg: string) {
     super(msg)
