@@ -1,9 +1,9 @@
-import { CompareStringValidator, EmailValidator, RequiredStringValidator, RequiredArrayValidator, type Validator } from '@/application/validations'
+import { CompareStringValidator, EmailValidator, RequiredStringValidator, RequiredArrayValidator, type Validator, type Extension, AllowedMimeTypes, MaxFileSize, RequiredBufferValidator } from '@/application/validations'
 
 export class ValidationBuild {
   private constructor (
     private readonly fieldName: string,
-    private readonly value: string,
+    private readonly value: any,
     private readonly validators: Validator[] = []
   ) {}
 
@@ -14,6 +14,8 @@ export class ValidationBuild {
   required (): ValidationBuild {
     if (typeof this.value === 'string') {
       this.validators.push(new RequiredStringValidator(this.fieldName, this.value))
+    } else if (this.value.buffer !== undefined) {
+      this.validators.push(new RequiredBufferValidator(this.fieldName, this.value.buffer))
     } else if (Array.isArray(this.value)) {
       this.validators.push(new RequiredArrayValidator(this.fieldName, this.value))
     }
@@ -27,6 +29,16 @@ export class ValidationBuild {
 
   email (): ValidationBuild {
     this.validators.push(new EmailValidator(this.value))
+    return this
+  }
+
+  image ({ allowed, maxSizeInMb }: { allowed: Extension[], maxSizeInMb: number }): ValidationBuild {
+    if (this.value.mimeType !== undefined) {
+      this.validators.push(new AllowedMimeTypes(allowed, this.value.mimeType))
+    }
+    if (this.value.buffer !== undefined) {
+      this.validators.push(new MaxFileSize(maxSizeInMb, this.value.buffer))
+    }
     return this
   }
 
