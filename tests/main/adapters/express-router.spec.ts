@@ -5,7 +5,7 @@ import { getMockReq, getMockRes } from '@jest-mock/express'
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 import { type Controller } from '@/application/controllers'
-import { adapterExpressController } from '@/infra/http'
+import { adapterExpressController } from '@/main/adapters'
 import { AcessToken, RefreshToken } from '@/domain/entities'
 
 describe('ExpressRouter', () => {

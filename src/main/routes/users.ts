@@ -1,4 +1,4 @@
-import { adapterExpressController as adapt } from '@/infra/http'
+import { adapterExpressController as adapt } from '@/main/adapters'
 import { type Router } from 'express'
 import { makeAddAccountController, makeLoginAccountController } from '../factories/controllers'
 
