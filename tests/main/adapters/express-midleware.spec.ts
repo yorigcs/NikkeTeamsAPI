@@ -1,22 +1,13 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/await-thenable */
-import { type Middleware } from '@/application/middlewares'
+
 import { type Request, type Response, type NextFunction, type RequestHandler } from 'express'
 import { type MockProxy, mock } from 'jest-mock-extended'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 
-type Adapter = (middleware: Middleware) => RequestHandler
+import { type Middleware } from '@/application/middlewares'
+import { adapterExpressMiddleware } from '@/main/adapters'
 
-const adapterExpressMiddleware: Adapter = middleware => async (req, res, next) => {
-  const { data, statusCode } = await middleware.handle({ ...req.headers })
-  if (statusCode === 200) {
-    const validEntries = Object.entries(data).filter(([,value]) => value)
-    res.locals = { ...res.locals, ...Object.fromEntries(validEntries) }
-    next()
-  } else {
-    res.status(statusCode).json({ error: data.message })
-  }
-}
 describe('ExpressMidleware', () => {
   let req: Request
   let res: Response
