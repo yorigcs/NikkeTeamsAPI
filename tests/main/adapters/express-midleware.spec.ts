@@ -16,7 +16,7 @@ describe('ExpressMidleware', () => {
   let sut: RequestHandler
 
   beforeAll(() => {
-    req = getMockReq({ headers: { any: 'any' } })
+    req = getMockReq({ headers: { any: 'any', cookie: 'any_cookie_key=any_cookie_value;' } })
     res = getMockRes().res
     next = getMockRes().next
     middleware = mock()
@@ -38,7 +38,7 @@ describe('ExpressMidleware', () => {
     await sut(req, res, next)
 
     expect(middleware.handle).toBeCalledTimes(1)
-    expect(middleware.handle).toHaveBeenCalledWith({ any: 'any' })
+    expect(middleware.handle).toHaveBeenCalledWith({ any: 'any', any_cookie_key: 'any_cookie_value' })
   })
 
   it('should add valid data to res.locals', async () => {
