@@ -1,4 +1,4 @@
-import { Controller, AddCampaignGuideController } from '@/application/controllers'
+import { Controller, AddCampaignTeamController } from '@/application/controllers'
 import { RequiredStringValidator, RequiredArrayValidator, RequiredBufferValidator, AllowedMimeTypes, MaxFileSize } from '@/application/validations'
 
 type HttpRequest = {
@@ -9,10 +9,10 @@ type HttpRequest = {
   stage: string
 }
 
-describe('AddCampaignGuideController', () => {
-  let sut: AddCampaignGuideController
+describe('AddCampaignTeamController', () => {
+  let sut: AddCampaignTeamController
   let httpRequest: HttpRequest
-  let addCampaignGuide: jest.Mock
+  let addCampaignTeam: jest.Mock
 
   beforeAll(() => {
     httpRequest = {
@@ -22,12 +22,12 @@ describe('AddCampaignGuideController', () => {
       power: '50000',
       stage: '10-5'
     }
-    addCampaignGuide = jest.fn()
-    addCampaignGuide.mockResolvedValue(true)
+    addCampaignTeam = jest.fn()
+    addCampaignTeam.mockResolvedValue(true)
   })
 
   beforeEach(() => {
-    sut = new AddCampaignGuideController(addCampaignGuide)
+    sut = new AddCampaignTeamController(addCampaignTeam)
   })
   it('should be instance of Controller', async () => {
     expect(sut).toBeInstanceOf(Controller)
@@ -36,7 +36,7 @@ describe('AddCampaignGuideController', () => {
   it('should returns statusCode 201 with sucess message', async () => {
     const httpResponse = await sut.handle(httpRequest)
 
-    expect(httpResponse).toEqual({ statusCode: 201, data: { message: 'Guide uploaded!' } })
+    expect(httpResponse).toEqual({ statusCode: 201, data: { message: 'Team uploaded!' } })
   })
 
   it('should build validators correctly', async () => {

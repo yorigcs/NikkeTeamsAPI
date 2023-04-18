@@ -1,7 +1,7 @@
 import { type UploadFile } from '@/domain/contracts/storage'
 import { type UUID } from '@/domain/contracts/crypto'
 
-import { type SaveCampaignGuideRepository } from '@/domain/contracts/repo'
+import { type SaveCampaignTeamRepository } from '@/domain/contracts/repo'
 
 type Input = {
   userId: string
@@ -10,12 +10,12 @@ type Input = {
   power: string
   stage: string
 }
-export type AddCampaignGuide = (input: Input) => Promise<void>
-type Setup = (fileStorage: UploadFile, uuid: UUID, campaignGuideRepoGuide: SaveCampaignGuideRepository) => AddCampaignGuide
+export type AddCampaignTeam = (input: Input) => Promise<void>
+type Setup = (fileStorage: UploadFile, uuid: UUID, campaignTeamRepo: SaveCampaignTeamRepository) => AddCampaignTeam
 
-export const setupAddCampaingGuide: Setup = (fileStorage, uuid, campaignGuideRepoGuide) => async input => {
+export const setupAddCampaingTeam: Setup = (fileStorage, uuid, campaignTeamRepo) => async input => {
   const { userId, file:{ buffer, mimeType }, nikkes, power, stage } = input
   const key = await uuid.generate({ key: userId })
   const linkImage = await fileStorage.upload({ file: buffer, fileName: `${key}.${mimeType.split('/')[1]}` })
-  await campaignGuideRepoGuide.save({ id: key, image: linkImage, nikkes, power, stage, uploaderId: userId })
+  await campaignTeamRepo.save({ id: key, image: linkImage, nikkes, power, stage, uploaderId: userId })
 }

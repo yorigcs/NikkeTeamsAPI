@@ -1,7 +1,7 @@
 import { Controller } from '@/application/controllers'
 import { created, type HttpResponse } from '@/application/helpers'
 import { type Validator, ValidationBuild as Builder } from '@/application/validations'
-import { type AddCampaignGuide } from '@/domain/use-cases'
+import { type AddCampaignTeam } from '@/domain/use-cases'
 
 type HttpRequest = {
   userId: string
@@ -13,14 +13,14 @@ type HttpRequest = {
 
 type Model = { message: string }
 
-export class AddCampaignGuideController extends Controller {
-  constructor (private readonly addCapaignService: AddCampaignGuide) {
+export class AddCampaignTeamController extends Controller {
+  constructor (private readonly addCapaignTeamService: AddCampaignTeam) {
     super()
   }
 
   async perform (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
-    await this.addCapaignService({ ...httpRequest })
-    return created({ message: 'Guide uploaded!' })
+    await this.addCapaignTeamService({ ...httpRequest })
+    return created({ message: 'Team uploaded!' })
   }
 
   override buildValidators ({ userId, power, stage, nikkes, file }: HttpRequest): Validator[] {

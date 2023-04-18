@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Users {
-  id       String     @unique
+  id       String         @unique
   name     String
-  email    String     @unique
+  email    String         @unique
   password String
   picture  String
-  roles    Roles      @default(user)
-  Campaing Campaign[]
+  roles    Roles          @default(user)
+  Campaing CampaignTeam[]
 }
 
 enum Roles {
@@ -22,7 +22,7 @@ enum Roles {
   user
 }
 
-model Campaign {
+model CampaignTeam {
   id         String   @unique
   stage      String
   power      String

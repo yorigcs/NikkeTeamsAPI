@@ -1,10 +1,10 @@
 import { mock, type MockProxy } from 'jest-mock-extended'
 import { type UploadFile } from '@/domain/contracts/storage'
 import { type UUID } from '@/domain/contracts/crypto'
-import { type SaveCampaignGuideRepository } from '@/domain/contracts/repo'
-import { type AddCampaignGuide, setupAddCampaingGuide } from '@/domain/use-cases'
+import { type SaveCampaignTeamRepository } from '@/domain/contracts/repo'
+import { type AddCampaignTeam, setupAddCampaingTeam } from '@/domain/use-cases'
 
-describe('AddCampaignGuideUseCase', () => {
+describe('AddCampaignTeamUseCase', () => {
   const input = {
     userId: 'any_userId',
     nikkes: ['any_nikke1', 'any_nikke2'],
@@ -14,19 +14,19 @@ describe('AddCampaignGuideUseCase', () => {
   }
   let uuid: MockProxy<UUID>
   let fileStorage: MockProxy<UploadFile>
-  let campaignGuideRepoGuide: MockProxy<SaveCampaignGuideRepository>
-  let sut: AddCampaignGuide
+  let campaignTeamRepo: MockProxy<SaveCampaignTeamRepository>
+  let sut: AddCampaignTeam
   beforeAll(() => {
     uuid = mock()
     uuid.generate.mockResolvedValue('any_uuid')
     fileStorage = mock()
     fileStorage.upload.mockResolvedValue('any_image_link')
-    campaignGuideRepoGuide = mock()
-    campaignGuideRepoGuide.save.mockResolvedValue()
+    campaignTeamRepo = mock()
+    campaignTeamRepo.save.mockResolvedValue()
   })
 
   beforeEach(() => {
-    sut = setupAddCampaingGuide(fileStorage, uuid, campaignGuideRepoGuide)
+    sut = setupAddCampaingTeam(fileStorage, uuid, campaignTeamRepo)
   })
 
   it('should call uuid generate with correct input', async () => {
@@ -59,11 +59,11 @@ describe('AddCampaignGuideUseCase', () => {
     await expect(response).rejects.toThrow(new Error('upload_error'))
   })
 
-  it('should call campaignGuideRepoGuide save with correct input', async () => {
+  it('should call campaignTeamRepo save with correct input', async () => {
     await sut(input)
 
-    expect(campaignGuideRepoGuide.save).toHaveBeenCalledTimes(1)
-    expect(campaignGuideRepoGuide.save).toHaveBeenCalledWith({
+    expect(campaignTeamRepo.save).toHaveBeenCalledTimes(1)
+    expect(campaignTeamRepo.save).toHaveBeenCalledWith({
       id: 'any_uuid',
       image: 'any_image_link',
       nikkes: ['any_nikke1', 'any_nikke2'],
@@ -73,8 +73,8 @@ describe('AddCampaignGuideUseCase', () => {
     })
   })
 
-  it('should throws if campaignGuideRepo save throws', async () => {
-    campaignGuideRepoGuide.save.mockRejectedValueOnce(new Error('save_error'))
+  it('should throws if ccampaignTeamRepo save throws', async () => {
+    campaignTeamRepo.save.mockRejectedValueOnce(new Error('save_error'))
 
     const response = sut(input)
 
