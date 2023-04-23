@@ -1,5 +1,5 @@
 import { EmailError } from '@/application/errors'
-import { EmailValidator } from '@/application/validations'
+import { EmailValidator } from '@/application/validations/string'
 
 describe('EmailValidator', () => {
   it('should returns undefinded if email is valid', () => {

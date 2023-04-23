@@ -1,6 +1,7 @@
 import { Controller, AddCampaignTeamController } from '@/application/controllers'
-import { RequiredStringValidator, RequiredArrayValidator, RequiredBufferValidator, AllowedMimeTypes, MaxFileSize } from '@/application/validations'
-
+import { RequiredStringValidator } from '@/application/validations/string'
+import { RequiredArrayValidator } from '@/application/validations/array'
+import { RequiredBufferValidator, AllowedMimeTypes, MaxFileSize } from '@/application/validations/image'
 type HttpRequest = {
   userId: string
   file: { buffer: Buffer, mimeType: string }

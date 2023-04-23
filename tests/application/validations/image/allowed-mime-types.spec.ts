@@ -1,4 +1,4 @@
-import { AllowedMimeTypes } from '@/application/validations/'
+import { AllowedMimeTypes } from '@/application/validations/image'
 import { InvalidMimeTypeError } from '@/application/errors'
 
 describe('AllowedMimeTypes', () => {

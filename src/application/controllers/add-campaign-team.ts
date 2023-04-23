@@ -1,6 +1,6 @@
 import { Controller } from '@/application/controllers'
 import { created, type HttpResponse } from '@/application/helpers'
-import { type Validator, ValidationBuild as Builder } from '@/application/validations'
+import { type Validator, FieldValidation as Validation } from '@/application/validations'
 import { type AddCampaignTeam } from '@/domain/use-cases'
 
 type HttpRequest = {
@@ -25,11 +25,11 @@ export class AddCampaignTeamController extends Controller {
 
   override buildValidators ({ userId, power, stage, nikkes, file }: HttpRequest): Validator[] {
     return [
-      ...Builder.of({ fieldName: 'userId', value: userId }).required().build(),
-      ...Builder.of({ fieldName: 'power', value: power }).required().build(),
-      ...Builder.of({ fieldName: 'stage', value: stage }).required().build(),
-      ...Builder.of({ fieldName: 'nikkes', value: nikkes }).required().build(),
-      ...Builder.of({ fieldName: 'file', value: file }).required().image({ allowed: ['png', 'jpeg', 'jpg'], maxSizeInMb: 6 }).build()
+      ...new Validation('userId').string(userId).required().build(),
+      ...new Validation('power').string(power).required().build(),
+      ...new Validation('stage').string(stage).required().build(),
+      ...new Validation('nikkes').array(nikkes).required().build(),
+      ...new Validation('file').image(file).required().allowedExtentions(['png', 'jpeg', 'jpg']).maxSize(6).build()
     ]
   }
 }

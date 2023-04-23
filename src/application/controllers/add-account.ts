@@ -1,5 +1,5 @@
 import { conflict, created, type HttpResponse } from '@/application/helpers'
-import { ValidationBuild as Builder, type Validator } from '@/application/validations'
+import { FieldValidation as Validation, type Validator } from '@/application/validations'
 import { Controller } from '@/application/controllers'
 import { type AddAccount } from '@/domain/use-cases'
 
@@ -21,10 +21,11 @@ export class AddAccountController extends Controller {
 
   override buildValidators ({ name, email, password, confirmPassword }: HttpRequest): Validator[] {
     return [
-      ...Builder.of({ fieldName: 'name', value: name }).required().build(),
-      ...Builder.of({ fieldName: 'email', value: email }).required().email().build(),
-      ...Builder.of({ fieldName: 'password', value: password }).required().build(),
-      ...Builder.of({ fieldName: 'confirmPassword', value: confirmPassword }).required().compareTo(password).build()
+      ...new Validation('name').string(name).required().build(),
+      ...new Validation('email').string(email).required().email().build(),
+      ...new Validation('password').string(password).required().build(),
+      ...new Validation('confirmPassword').string(confirmPassword).required().compareTo(password).build()
+
     ]
   }
 }

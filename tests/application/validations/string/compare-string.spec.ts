@@ -1,4 +1,4 @@
-import { CompareStringValidator } from '@/application/validations'
+import { CompareStringValidator } from '@/application/validations/string'
 import { CompareFieldsError } from '@/application/errors'
 
 describe('CompareStringValidator', () => {

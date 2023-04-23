@@ -1,5 +1,5 @@
 import { ok, unauthorized, type HttpResponse } from '@/application/helpers'
-import { RequiredStringValidator } from '@/application/validations'
+import { RequiredStringValidator } from '@/application/validations/string'
 import { type Middleware } from '@/application/middlewares'
 
 type Model = Error | { userId: string }

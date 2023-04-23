@@ -1,6 +1,6 @@
 import { Controller, LoginAccountController } from '@/application/controllers'
 import { UnauthorizedError } from '@/application/errors'
-import { EmailValidator, RequiredStringValidator } from '@/application/validations'
+import { EmailValidator, RequiredStringValidator } from '@/application/validations/string'
 
 describe('LoginAccountController', () => {
   const httpRequest = { email: 'any@email.com', password: 'any_password' }

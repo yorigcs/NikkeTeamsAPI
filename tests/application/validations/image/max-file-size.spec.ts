@@ -1,5 +1,5 @@
 import { MaxFileSizeError } from '@/application/errors'
-import { MaxFileSize } from '@/application/validations'
+import { MaxFileSize } from '@/application/validations/image'
 
 describe('MaxFileSize', () => {
   it('should returns MaxFileSizeError if value is invalid', () => {
