@@ -29,6 +29,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.315.0",
     "@prisma/client": "^4.8.1",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
