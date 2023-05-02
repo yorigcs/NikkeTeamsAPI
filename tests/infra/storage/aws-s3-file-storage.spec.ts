@@ -9,15 +9,17 @@ describe('AwsS3FileStorage', () => {
   let secret: string
   let fileName: string
   let bucket: string
+  let region: string
 
   beforeAll(() => {
     accessKey = 'any_key'
     secret = 'any_secret'
     bucket = 'any_bucket'
     fileName = 'any_file_name'
+    region = 'any_region_name'
   })
   beforeEach(() => {
-    sut = new AwsS3FileStorage(accessKey, secret, bucket)
+    sut = new AwsS3FileStorage(accessKey, secret, bucket, region)
   })
   it('should call S3 with correct param configs', async () => {
     expect(sut).toBeDefined()
@@ -25,7 +27,8 @@ describe('AwsS3FileStorage', () => {
       credentials: {
         accessKeyId: accessKey,
         secretAccessKey: secret
-      }
+      },
+      region
     })
   })
 
