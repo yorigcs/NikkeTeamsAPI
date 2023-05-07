@@ -5,7 +5,7 @@ import { type RequestHandler } from 'express'
 type Adapter = (controller: Controller) => RequestHandler
 
 const adapterExpressController: Adapter = controller => async (req, res) => {
-  const { statusCode, data } = await controller.handle({ ...req.body })
+  const { statusCode, data } = await controller.handle({ ...req.body, ...res.locals })
   const { acessToken, refreshToken, ...bodyData } = data
   if (acessToken !== undefined && refreshToken !== undefined) {
     res.cookie('acessToken', acessToken, { expires: new Date(Date.now() + AcessToken.expirationInMs), maxAge: AcessToken.expirationInMs, httpOnly: true, sameSite: 'lax' })
