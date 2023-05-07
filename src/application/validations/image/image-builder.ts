@@ -14,17 +14,17 @@ export class ImageBuild {
   }
 
   required (): ImageBuild {
-    this.validators.push(new RequiredBufferValidator(this.fieldName, this.file.buffer))
+    this.validators.push(new RequiredBufferValidator(this.fieldName, this.file?.buffer))
     return this
   }
 
   allowedExtentions (allowed: Extension[]): ImageBuild {
-    this.validators.push(new AllowedMimeTypes(allowed, this.file.mimeType))
+    this.validators.push(new AllowedMimeTypes(allowed, this.file?.mimeType))
     return this
   }
 
   maxSize (maxSizeInMb: number): ImageBuild {
-    this.validators.push(new MaxFileSize(maxSizeInMb, this.file.buffer))
+    this.validators.push(new MaxFileSize(maxSizeInMb, this.file?.buffer))
     return this
   }
 

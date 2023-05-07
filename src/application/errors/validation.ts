@@ -6,6 +6,13 @@ export class RequiredFieldError extends Error {
   }
 }
 
+export class InvalidFieldError extends Error {
+  constructor (private readonly msg: string) {
+    super(msg)
+    this.name = 'InvalidFieldError'
+  }
+}
+
 export class CompareFieldsError extends Error {
   constructor (private readonly field: string, private readonly fieldToCompare: string) {
     super(`The field ${field} must be equals to field ${fieldToCompare}`)

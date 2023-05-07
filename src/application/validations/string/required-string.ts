@@ -1,4 +1,4 @@
-import { RequiredFieldError } from '@/application/errors'
+import { InvalidFieldError, RequiredFieldError } from '@/application/errors'
 import { RequiredValidator } from '@/application/validations'
 
 export class RequiredStringValidator extends RequiredValidator {
@@ -7,8 +7,8 @@ export class RequiredStringValidator extends RequiredValidator {
   }
 
   override validate (): Error | undefined {
-    if (super.validate() !== undefined || this.value === '') {
-      return new RequiredFieldError(this.fieldName)
-    }
+    if (super.validate() !== undefined) return new RequiredFieldError(this.fieldName)
+
+    if (typeof this.value !== 'string') return new InvalidFieldError(`The field [${this.fieldName}] must be a string.`)
   }
 }

@@ -1,4 +1,4 @@
-import { RequiredFieldError } from '@/application/errors'
+import { InvalidFieldError, RequiredFieldError } from '@/application/errors'
 import { RequiredValidator } from '@/application/validations'
 
 export class RequiredArrayValidator extends RequiredValidator {
@@ -7,8 +7,10 @@ export class RequiredArrayValidator extends RequiredValidator {
   }
 
   override validate (): Error | undefined {
-    if (super.validate() !== undefined || this.value.length === 0) {
+    if (super.validate() !== undefined) {
       return new RequiredFieldError(this.fieldName)
     }
+
+    if (!Array.isArray(this.value)) return new InvalidFieldError(`The field [${this.fieldName}] must be an array.`)
   }
 }
