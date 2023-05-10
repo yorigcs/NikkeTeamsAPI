@@ -5,7 +5,7 @@ services:
     image: postgres:15
     restart: always
     container_name: db-tests-nikke
-    ports:
+    ports:f
       - '5433:5432'
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
