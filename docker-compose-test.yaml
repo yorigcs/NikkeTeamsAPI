@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  db:
+  db-tests-nikke:
     image: postgres:15
     restart: always
     container_name: db-tests-nikke
     ports:
       - '5433:5432'
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: tests
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
