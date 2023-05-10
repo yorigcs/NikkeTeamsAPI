@@ -1,4 +1,7 @@
 # NikkeTeamsAPI
+<div>
+  <img src="https://github.com/yorigcs/NikkeTeamsAPI/actions/workflows/test.yml/badge.svg" />
+</div>
 
 The NikkeTeams project consists of a Restful API still in development for sharing teams among Nikke game players, in order to efficiently help them progress more easily. The API was built following the principles of clean architecture along with best software development practices such as TDD (Test Driven Development), SOLID, and design patterns.
 
