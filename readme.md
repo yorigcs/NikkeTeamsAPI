@@ -1,6 +1,10 @@
 # NikkeTeamsAPI
 
-RestFull API with clean architecture to users share teams of the game Nikke.
+The NikkeTeams project consists of a Restful API still in development for sharing teams among Nikke game players, in order to efficiently help them progress more easily. The API was built following the principles of clean architecture along with best software development practices such as TDD (Test Driven Development), SOLID, and design patterns.
+
+The chosen technologies were selected based on their efficiency and suitability for the project, including Node.js with Typescript as the main language, Express.js as the web application framework, Jest as the unit testing framework, Prisma as the ORM for accessing the Postgres database, Redis as the in-memory database for caching and performance optimization, AWS S3 as the cloud file storage service, and Docker to facilitate the deployment and scalability process of the application.
+
+I developed all the code with a focus on ensuring the maintainability, scalability, and robustness of the application.
 
 
 ## Installation
