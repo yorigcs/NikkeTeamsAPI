@@ -7,6 +7,16 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     environment: Test
+    env:
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+      S3_BUCKET: ${{secrets.S3_BUCKET}}
+      S3_REGION: ${{secrets.S3_REGION}}
+      S3_SECRET_ACESS_KEY: ${{secrets.S3_SECRET_ACESS_KEY}}
+      S3_ACESS_KEY_ID: ${{secrets.S3_ACESS_KEY_ID}}
+      TOKEN_SECRET: ${{secrets.TOKEN_SECRET}}
     strategy:
       matrix:
         node-version: [18.x]
