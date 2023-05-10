@@ -7,20 +7,25 @@
     "prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "docker-compose-test": "docker compose -f docker-compose-test.yaml",
-    "docker-test": "npm run docker-compose-test -- down && npm run docker-compose-test -- up -d && (sleep 5 && npm run prisma:migrate:test)",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm t -- --watch",
     "test:staged": "npm t -- --findRelatedTests",
     "test:coverage": "npm t -- --coverage",
-    "test:integration": "npm run docker-test && npm t -- --config ./jest.integration.config.ts --watch",
+    "test:integration": "npm run docker:test:local && npm t -- --config ./jest.integration.config.ts --watch",
+    "test:ci": "npm t -- --config ./jest.ci.config.ts",
     "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/main",
     "start": "node -r dotenv/config dist/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
-    "prisma:migrate:test": "dotenv -e .env.test -- npm run prisma:migrate:deploy"
+    "prisma:migrate:test": "dotenv -e .env.test -- npm run prisma:migrate:deploy",
+
+    "docker:compose:test:local": "docker compose --env-file ./.env.test -f docker-compose-test.yaml",
+    "docker:test:local": "npm run docker:compose:test:local -- down && npm run docker:compose:test:local -- up -d && (sleep 5 && npm run prisma:migrate:test)",
+    
+    "docker:compose:test:ci": "docker compose -f docker-compose-test.yaml",
+    "docker:test:ci": "npm run docker:compose:test:ci -- down && npm run docker:compose:test:ci -- up -d && (sleep 5 && npm run prisma:migrate:deploy)"
   },
   "prisma": {
     "schema": "./src/infra/repo/schema.prisma"

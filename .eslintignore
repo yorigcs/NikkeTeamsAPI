@@ -1,4 +1,3 @@
 node_modules
 dist
-jest.config.ts
-jest.integration.config.ts
+jest.*
