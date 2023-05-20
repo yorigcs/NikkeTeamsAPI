@@ -1,6 +1,7 @@
 import { Controller } from '@/application/controllers'
-import { created, type HttpResponse } from '@/application/helpers'
+import { badRequest, created, type HttpResponse } from '@/application/helpers'
 import { type Validator, FieldValidation as Validation } from '@/application/validations'
+import { CheckError } from '@/domain/entities/errors'
 import { type AddCampaignTeam } from '@/domain/use-cases'
 
 type HttpRequest = {
@@ -19,8 +20,13 @@ export class AddCampaignTeamController extends Controller {
   }
 
   async perform (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
-    await this.addCapaignTeamService({ ...httpRequest })
-    return created({ message: 'Team uploaded!' })
+    try {
+      await this.addCapaignTeamService({ ...httpRequest })
+      return created({ message: 'Team uploaded!' })
+    } catch (error) {
+      if (error instanceof CheckError) return badRequest(error)
+      throw error
+    }
   }
 
   override buildValidators ({ userId, power, stage, nikkes, file }: HttpRequest): Validator[] {

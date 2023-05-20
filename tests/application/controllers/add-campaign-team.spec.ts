@@ -2,6 +2,9 @@ import { Controller, AddCampaignTeamController } from '@/application/controllers
 import { RequiredStringValidator } from '@/application/validations/string'
 import { RequiredArrayValidator } from '@/application/validations/array'
 import { RequiredBufferValidator, AllowedMimeTypes, MaxFileSize } from '@/application/validations/image'
+import { CheckError } from '@/domain/entities/errors'
+import { ServerError } from '@/application/errors'
+
 type HttpRequest = {
   userId: string
   file: { buffer: Buffer, mimeType: string }
@@ -38,6 +41,22 @@ describe('AddCampaignTeamController', () => {
     const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse).toEqual({ statusCode: 201, data: { message: 'Team uploaded!' } })
+  })
+
+  it('should returns badRequest if addCampaignTeam throws CheckError instance', async () => {
+    const error = new CheckError('any_error')
+    addCampaignTeam.mockRejectedValueOnce(error)
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual({ statusCode: 400, data: error })
+  })
+
+  it('should throws if addCampaignTeam throws another error', async () => {
+    const error = new Error('any_error')
+    addCampaignTeam.mockRejectedValueOnce(error)
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse).toEqual({ statusCode: 500, data: new ServerError(error) })
   })
 
   it('should build validators correctly', async () => {
