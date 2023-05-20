@@ -1,8 +1,9 @@
 import { mock, type MockProxy } from 'jest-mock-extended'
 import { type UploadFile } from '@/domain/contracts/storage'
 import { type UUID } from '@/domain/contracts/crypto'
-import { type SaveCampaignTeamRepository } from '@/domain/contracts/repo'
+import { type LoadCampaignTeamStagesAll, type SaveCampaignTeamRepository } from '@/domain/contracts/repo'
 import { type AddCampaignTeam, setupAddCampaingTeam } from '@/domain/use-cases'
+import { CheckError } from '@/domain/entities/errors'
 
 describe('AddCampaignTeamUseCase', () => {
   const input = {
@@ -15,6 +16,7 @@ describe('AddCampaignTeamUseCase', () => {
   let uuid: MockProxy<UUID>
   let fileStorage: MockProxy<UploadFile>
   let campaignTeamRepo: MockProxy<SaveCampaignTeamRepository>
+  let campaignTeamStageRepo: MockProxy<LoadCampaignTeamStagesAll>
   let sut: AddCampaignTeam
   beforeAll(() => {
     uuid = mock()
@@ -23,10 +25,12 @@ describe('AddCampaignTeamUseCase', () => {
     fileStorage.upload.mockResolvedValue('any_image_link')
     campaignTeamRepo = mock()
     campaignTeamRepo.save.mockResolvedValue()
+    campaignTeamStageRepo = mock()
+    campaignTeamStageRepo.load.mockResolvedValue([{ id: 'any_id', stage: '15-20' }])
   })
 
   beforeEach(() => {
-    sut = setupAddCampaingTeam(fileStorage, uuid, campaignTeamRepo)
+    sut = setupAddCampaingTeam(fileStorage, uuid, campaignTeamRepo, campaignTeamStageRepo)
   })
 
   it('should call uuid generate with correct input', async () => {
@@ -73,12 +77,28 @@ describe('AddCampaignTeamUseCase', () => {
     })
   })
 
-  it('should throws if ccampaignTeamRepo save throws', async () => {
+  it('should throws if campaignTeamRepo save throws', async () => {
     campaignTeamRepo.save.mockRejectedValueOnce(new Error('save_error'))
 
     const response = sut(input)
 
     await expect(response).rejects.toThrow(new Error('save_error'))
+  })
+
+  it('should throws if campaignTeamStageRepo load throws', async () => {
+    campaignTeamStageRepo.load.mockRejectedValueOnce(new Error('load_error'))
+
+    const response = sut(input)
+
+    await expect(response).rejects.toThrow(new Error('load_error'))
+  })
+
+  it('should throws a CheckError if the stage is not available', async () => {
+    campaignTeamStageRepo.load.mockResolvedValueOnce([])
+
+    const response = sut(input)
+
+    await expect(response).rejects.toThrow(new CheckError('This stage is not available!'))
   })
 
   it('should not throws if sucess', async () => {
