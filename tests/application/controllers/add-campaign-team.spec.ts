@@ -11,6 +11,7 @@ type HttpRequest = {
   nikkes: string[]
   power: string
   stage: string
+  stageType: string
 }
 
 describe('AddCampaignTeamController', () => {
@@ -24,7 +25,8 @@ describe('AddCampaignTeamController', () => {
       file: { buffer: Buffer.from('any_buffer'), mimeType: 'image/png' },
       nikkes: ['any_nikke1', 'any_nikke2', 'any_nikke3', 'any_nikke4', 'any_nikke5'],
       power: '50000',
-      stage: '10-5'
+      stage: '10-5',
+      stageType: 'normal'
     }
     addCampaignTeam = jest.fn()
     addCampaignTeam.mockResolvedValue(true)
@@ -66,6 +68,7 @@ describe('AddCampaignTeamController', () => {
       new RequiredStringValidator('userId', httpRequest.userId),
       new RequiredStringValidator('power', httpRequest.power),
       new RequiredStringValidator('stage', httpRequest.stage),
+      new RequiredStringValidator('stageType', httpRequest.stageType),
       new RequiredArrayValidator('nikkes', httpRequest.nikkes),
       new RequiredBufferValidator('file', httpRequest.file.buffer),
       new AllowedMimeTypes(['png', 'jpeg', 'jpg'], httpRequest.file.mimeType),

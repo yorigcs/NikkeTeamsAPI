@@ -10,6 +10,7 @@ type HttpRequest = {
   nikkes: string[]
   power: string
   stage: string
+  stageType: string
 }
 
 type Model = { message: string }
@@ -29,11 +30,12 @@ export class AddCampaignTeamController extends Controller {
     }
   }
 
-  override buildValidators ({ userId, power, stage, nikkes, file }: HttpRequest): Validator[] {
+  override buildValidators ({ userId, power, stage, nikkes, file, stageType }: HttpRequest): Validator[] {
     return [
       ...new Validation('userId').string(userId).required().build(),
       ...new Validation('power').string(power).required().build(),
       ...new Validation('stage').string(stage).required().build(),
+      ...new Validation('stageType').string(stageType).required().build(),
       ...new Validation('nikkes').array(nikkes).required().build(),
       ...new Validation('file').image(file).required().allowedExtentions(['png', 'jpeg', 'jpg']).maxSize(6).build()
     ]

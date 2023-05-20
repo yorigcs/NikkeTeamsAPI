@@ -11,6 +11,7 @@ describe('AddCampaignTeamUseCase', () => {
     nikkes: ['any_nikke1', 'any_nikke2'],
     power: '50000',
     stage: '15-20',
+    stageType: 'normal',
     file: { buffer: Buffer.from('any_buffer'), mimeType: 'image/png' }
   }
   let uuid: MockProxy<UUID>
@@ -26,7 +27,7 @@ describe('AddCampaignTeamUseCase', () => {
     campaignTeamRepo = mock()
     campaignTeamRepo.save.mockResolvedValue()
     campaignTeamStageRepo = mock()
-    campaignTeamStageRepo.load.mockResolvedValue([{ id: 'any_id', stage: '15-20' }])
+    campaignTeamStageRepo.load.mockResolvedValue([{ id: 'any_id', stage: '15-20', type: 'normal' }])
   })
 
   beforeEach(() => {

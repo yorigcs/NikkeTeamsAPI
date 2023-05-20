@@ -8,7 +8,7 @@ describe('CampaignTeamStagesRepository', () => {
   let sut: CampaignTeamStagesRepository
   const date = new Date()
   beforeAll(() => {
-    campaignTeamStage = { id: 'any_id', stage: 'any_stage', createdAt: date, updatedAt: date }
+    campaignTeamStage = { id: 'any_id', stage: 'any_stage', type: 'normal', createdAt: date, updatedAt: date }
     prismaMock.campaignTeamStages.findMany.mockResolvedValue([campaignTeamStage])
   })
   beforeEach(() => {
