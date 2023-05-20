@@ -33,3 +33,10 @@ model CampaignTeam {
   updatedAt  DateTime @updatedAt
   users      Users    @relation(fields: [uploaderId], references: [id])
 }
+
+model CampaignTeamStages {
+  id        String   @unique
+  stage     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
