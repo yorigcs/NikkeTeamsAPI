@@ -12,6 +12,7 @@ describe('AddCampaignTeamUseCase', () => {
     power: '50000',
     stage: '15-20',
     stageType: 'normal',
+    notes: 'any_note',
     file: { buffer: Buffer.from('any_buffer'), mimeType: 'image/png' }
   }
   let uuid: MockProxy<UUID>
@@ -74,6 +75,22 @@ describe('AddCampaignTeamUseCase', () => {
       nikkes: ['any_nikke1', 'any_nikke2'],
       power: '50000',
       stage: '15-20',
+      notes: 'any_note',
+      uploaderId: 'any_userId'
+    })
+  })
+
+  it('should call campaignTeamRepo save with correct input', async () => {
+    await sut({ ...input, notes: undefined })
+
+    expect(campaignTeamRepo.save).toHaveBeenCalledTimes(1)
+    expect(campaignTeamRepo.save).toHaveBeenCalledWith({
+      id: 'any_uuid',
+      image: 'any_image_link',
+      nikkes: ['any_nikke1', 'any_nikke2'],
+      power: '50000',
+      stage: '15-20',
+      notes: null,
       uploaderId: 'any_userId'
     })
   })
