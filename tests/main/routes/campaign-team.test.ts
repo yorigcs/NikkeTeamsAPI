@@ -4,7 +4,7 @@ import request from 'supertest'
 
 jest.unmock('@/infra/repo/prisma')
 
-describe('campaign-guide Routes', () => {
+describe('campaign-team Routes', () => {
   const accountData = { name: 'any_name', email: 'any_mail@mail.com', password: 'any_pass', confirmPassword: 'any_pass' }
   let acessTokenResp: string
 
@@ -13,12 +13,16 @@ describe('campaign-guide Routes', () => {
     const { header } = await request(app).post('/api/sign-in').send({ email: accountData.email, password: accountData.password })
     const [acessToken] = header['set-cookie']
     acessTokenResp = acessToken.split(';')[0]
+    await prismaConnection.campaignTeamStages.create({ data: { stage: '1-10' } })
   })
 
-  afterAll(async () => { await prismaConnection.users.deleteMany() })
+  afterAll(async () => {
+    await prismaConnection.users.deleteMany()
+    await prismaConnection.campaignTeamStages.deleteMany()
+  })
 
   describe('POST /campaign-upload', () => {
-    const validFields = { power: '123', stage: '1-10', nikkes: ['nikke1', 'nikke2'] }
+    const validFields = { power: '123', stage: '1-10', nikkes: ['nikke1', 'nikke2'], stageType: 'normal' }
     const onePixelImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjYMj+/x8ABEMCahdmb9sAAAAASUVORK5CYII='
     const file = Buffer.from(onePixelImage, 'base64')
 
@@ -78,10 +82,42 @@ describe('campaign-guide Routes', () => {
         .field('power', validFields.power)
         .field('stage', validFields.stage)
         .field('nikkes', validFields.nikkes)
+        .field('stageType', validFields.stageType)
         .attach('file', file, { filename: 'test.ext' })
 
       expect(status).toBe(400)
       expect(body).toEqual({ error: 'Unsupported file. Allowed extensions: png, jpeg, jpg' })
+    })
+
+    it('should response with status 400 and body error with message "The field [notes] must have at least 10 characters"', async () => {
+      const onePixelImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjYMj+/x8ABEMCahdmb9sAAAAASUVORK5CYII='
+      const file = Buffer.from(onePixelImage, 'base64')
+      const { status, body } = await request(app).post('/api/campaign-upload').set('Cookie', [acessTokenResp])
+        .field('power', validFields.power)
+        .field('stage', validFields.stage)
+        .field('nikkes', validFields.nikkes)
+        .field('stageType', validFields.stageType)
+        .field('notes', 'small')
+        .attach('file', file, { filename: 'test.png' })
+
+      expect(status).toBe(400)
+      expect(body).toEqual({ error: 'The field [notes] must have at least 10 characters' })
+    })
+
+    it('should response with status 400 and body error with message "The field [notes] must have at least 10 characters"', async () => {
+      const onePixelImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjYMj+/x8ABEMCahdmb9sAAAAASUVORK5CYII='
+      const file = Buffer.from(onePixelImage, 'base64')
+      const { status, body } = await request(app).post('/api/campaign-upload').set('Cookie', [acessTokenResp])
+        .field('power', validFields.power)
+        .field('stage', validFields.stage)
+        .field('nikkes', validFields.nikkes)
+        .field('stageType', validFields.stageType)
+        .field('notes', 'A string reallly big!!,A string reallly big!!,A string reallly big!!,A string reallly big!!,A string reallly big!!A string reallly big!!,A string reallly big!!,A string reallly big!!,A string reallly big!!'
+        )
+        .attach('file', file, { filename: 'test.png' })
+
+      expect(status).toBe(400)
+      expect(body).toEqual({ error: 'The field [notes] must have less than 200 characters' })
     })
 
     it('should response with status 201 and body with message "Team uploaded!"', async () => {
@@ -91,6 +127,7 @@ describe('campaign-guide Routes', () => {
         .field('power', validFields.power)
         .field('stage', validFields.stage)
         .field('nikkes', validFields.nikkes)
+        .field('stageType', validFields.stageType)
         .attach('file', file, { filename: 'test.png' })
 
       expect(status).toBe(201)

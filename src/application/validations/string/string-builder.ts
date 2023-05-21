@@ -1,6 +1,6 @@
 
 import { type Validator } from '@/application/validations'
-import { CompareStringValidator, EmailValidator } from '@/application/validations/string'
+import { CompareStringValidator, EmailValidator, MaxStringLengthValidator, MinStringLengthValidator } from '@/application/validations/string'
 import { RequiredStringValidator } from './required-string'
 
 export class StringBuild {
@@ -26,6 +26,16 @@ export class StringBuild {
 
   email (): StringBuild {
     this.validators.push(new EmailValidator(this.value))
+    return this
+  }
+
+  min (minLength: number): StringBuild {
+    this.validators.push(new MinStringLengthValidator(this.fieldName, this.value, minLength))
+    return this
+  }
+
+  max (maxLength: number): StringBuild {
+    this.validators.push(new MaxStringLengthValidator(this.fieldName, this.value, maxLength))
     return this
   }
 

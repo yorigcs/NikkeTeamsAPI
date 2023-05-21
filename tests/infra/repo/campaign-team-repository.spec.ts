@@ -9,7 +9,7 @@ describe('CampaignTeamRepository', () => {
   const date = new Date()
 
   beforeAll(() => {
-    campaignTeam = { id: 'any_id', image: 'any_img', nikkes: ['any_nikke'], power: '1000', stage: '10', uploaderId: 'any_uploader_id', createdAt: date, updatedAt: date }
+    campaignTeam = { id: 'any_id', image: 'any_img', nikkes: ['any_nikke'], power: '1000', stage: '10', uploaderId: 'any_uploader_id', notes: null, createdAt: date, updatedAt: date }
     prismaMock.campaignTeam.create.mockResolvedValue(campaignTeam)
   })
   beforeEach(() => {

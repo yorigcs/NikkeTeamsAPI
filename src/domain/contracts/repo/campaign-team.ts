@@ -9,6 +9,7 @@ export namespace SaveCampaignTeamRepository {
     power: string
     image: string
     nikkes: string[]
+    notes: string | null
     uploaderId: string
   }
 
