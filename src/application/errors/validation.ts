@@ -6,6 +6,20 @@ export class RequiredFieldError extends Error {
   }
 }
 
+export class MaxLenghtFieldError extends Error {
+  constructor (private readonly field: string, private readonly maxlength: number) {
+    super(`The field ${field} must have less than ${maxlength} characters`)
+    this.name = 'MaxLenghtFieldError'
+  }
+}
+
+export class MinLenghtFieldError extends Error {
+  constructor (private readonly field: string, private readonly minlength: number) {
+    super(`The field ${field} must have at least ${minlength} characters`)
+    this.name = 'MinLenghtFieldError'
+  }
+}
+
 export class InvalidFieldError extends Error {
   constructor (private readonly msg: string) {
     super(msg)
