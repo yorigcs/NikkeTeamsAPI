@@ -3,7 +3,7 @@ export interface LoadCampaignTeamStagesAll {
 }
 
 type CampaingStage = {
-  id: string
+  id: number
   stage: string
   type: 'normal' | 'hard' | 'sub' | 'exNormal' | 'exHard'
 }

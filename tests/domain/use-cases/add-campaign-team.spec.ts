@@ -28,7 +28,7 @@ describe('AddCampaignTeamUseCase', () => {
     campaignTeamRepo = mock()
     campaignTeamRepo.save.mockResolvedValue()
     campaignTeamStageRepo = mock()
-    campaignTeamStageRepo.load.mockResolvedValue([{ id: 'any_id', stage: '15-20', type: 'normal' }])
+    campaignTeamStageRepo.load.mockResolvedValue([{ id: 1, stage: '15-20', type: 'normal' }])
   })
 
   beforeEach(() => {
