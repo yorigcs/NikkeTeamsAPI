@@ -36,7 +36,7 @@ model CampaignTeam {
 }
 
 model CampaignTeamStages {
-  id        String    @unique
+  id        Int       @id @default(autoincrement())
   stage     String
   type      StageType @default(normal)
   createdAt DateTime  @default(now())
