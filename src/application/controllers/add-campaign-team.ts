@@ -11,6 +11,7 @@ type HttpRequest = {
   power: string
   stage: string
   stageType: string
+  notes?: string
 }
 
 type Model = { message: string }
@@ -30,8 +31,8 @@ export class AddCampaignTeamController extends Controller {
     }
   }
 
-  override buildValidators ({ userId, power, stage, nikkes, file, stageType }: HttpRequest): Validator[] {
-    return [
+  override buildValidators ({ userId, power, stage, nikkes, file, stageType, notes }: HttpRequest): Validator[] {
+    const validators = [
       ...new Validation('userId').string(userId).required().build(),
       ...new Validation('power').string(power).required().build(),
       ...new Validation('stage').string(stage).required().build(),
@@ -39,5 +40,9 @@ export class AddCampaignTeamController extends Controller {
       ...new Validation('nikkes').array(nikkes).required().build(),
       ...new Validation('file').image(file).required().allowedExtentions(['png', 'jpeg', 'jpg']).maxSize(6).build()
     ]
+    if (typeof notes === 'string') {
+      validators.push(...new Validation('notes').string(notes).required().min(10).max(200).build())
+    }
+    return validators
   }
 }

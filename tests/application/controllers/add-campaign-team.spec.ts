@@ -1,5 +1,5 @@
 import { Controller, AddCampaignTeamController } from '@/application/controllers'
-import { RequiredStringValidator } from '@/application/validations/string'
+import { MaxStringLengthValidator, MinStringLengthValidator, RequiredStringValidator } from '@/application/validations/string'
 import { RequiredArrayValidator } from '@/application/validations/array'
 import { RequiredBufferValidator, AllowedMimeTypes, MaxFileSize } from '@/application/validations/image'
 import { CheckError } from '@/domain/entities/errors'
@@ -12,6 +12,7 @@ type HttpRequest = {
   power: string
   stage: string
   stageType: string
+  notes?: string
 }
 
 describe('AddCampaignTeamController', () => {
@@ -73,6 +74,25 @@ describe('AddCampaignTeamController', () => {
       new RequiredBufferValidator('file', httpRequest.file.buffer),
       new AllowedMimeTypes(['png', 'jpeg', 'jpg'], httpRequest.file.mimeType),
       new MaxFileSize(6, httpRequest.file.buffer)
+
+    ])
+  })
+
+  it('should build validators correctly with notes field', async () => {
+    const validators = sut.buildValidators({ ...httpRequest, notes: 'any_note' })
+
+    expect(validators).toEqual([
+      new RequiredStringValidator('userId', httpRequest.userId),
+      new RequiredStringValidator('power', httpRequest.power),
+      new RequiredStringValidator('stage', httpRequest.stage),
+      new RequiredStringValidator('stageType', httpRequest.stageType),
+      new RequiredArrayValidator('nikkes', httpRequest.nikkes),
+      new RequiredBufferValidator('file', httpRequest.file.buffer),
+      new AllowedMimeTypes(['png', 'jpeg', 'jpg'], httpRequest.file.mimeType),
+      new MaxFileSize(6, httpRequest.file.buffer),
+      new RequiredStringValidator('notes', 'any_note'),
+      new MinStringLengthValidator('notes', 'any_note', 10),
+      new MaxStringLengthValidator('notes', 'any_note', 200)
 
     ])
   })
