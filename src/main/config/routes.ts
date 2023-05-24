@@ -1,13 +1,11 @@
-import { Router, type Express } from 'express'
+import { type FastifyInstance } from 'fastify'
 import { readdirSync } from 'fs'
 import { join } from 'path'
-export const setupRoutes = (app: Express): void => {
-  const router = Router()
-  app.use('/api', router)
+export const setupRoutes = (app: FastifyInstance): void => {
   readdirSync(join(__dirname, '../routes'))
     .map(async file => {
       if (!file.endsWith('.map')) {
-        (await import(`../routes/${file}`)).default(router)
+        await app.register(await import(`../routes/${file}`), { prefix: '/api' })
       }
     })
 }
