@@ -16,4 +16,7 @@ const runPrimaryProcess = (): void => {
   })
 }
 
-cluster.isPrimary ? runPrimaryProcess() : executeServer()
+const executeProcess = async (): Promise<void> => {
+  cluster.isPrimary ? runPrimaryProcess() : await executeServer()
+}
+void executeProcess()
