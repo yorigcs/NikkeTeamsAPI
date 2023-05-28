@@ -6,8 +6,6 @@ type Adapter = (controller: Controller) => (req: FastifyRequest, reply: FastifyR
 
 const adapterFastifyController: Adapter = controller => async (req, reply) => {
   const body = req.body as any
-  const file = await req.file()
-  console.log(file)
   const { statusCode, data } = await controller.handle({ ...body, ...req.locals })
   const { acessToken, refreshToken, ...bodyData } = data
   if (acessToken !== undefined && refreshToken !== undefined) {
