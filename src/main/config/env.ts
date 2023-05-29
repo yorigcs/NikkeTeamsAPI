@@ -1,5 +1,5 @@
 export const env = {
-  port: process.env.PORT ?? 8080,
+  port: Number(process.env.PORT) ?? 8080,
   tokenSecret: process.env.TOKEN_SECRET ?? '',
   s3: {
     accessKey: process.env.S3_ACESS_KEY_ID ?? '',
